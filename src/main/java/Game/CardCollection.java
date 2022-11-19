@@ -1,10 +1,12 @@
+package Game;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class CardCollection {
 
-    List<Card> collection = new ArrayList<>();
+    protected List<Card> collection = new ArrayList<>();
 
     public List<Card> getCollection() {
         return collection;
@@ -13,7 +15,7 @@ public class CardCollection {
     public CardCollection getPackageFromCollection() {
         CardCollection Package = new CardCollection();
         for (int i = 0; i < 5; i++) {
-            Package.addCardToCollection(getRandomCardFromCollection());
+            Package.addCardToCollection(getAndRemoveRandomCardFromCollection());
         }
         return Package;
     }
@@ -36,10 +38,10 @@ public class CardCollection {
         return collection.get(CardIndex);
     }
 
-    public Card getRandomCardFromCollection() {
+    public Card getAndRemoveRandomCardFromCollection() {
         Random rand = new Random();
         int randCardIndex = rand.nextInt(collection.size());
-        return getCardFromCollection(randCardIndex);
+        return getAndRemoveCardFromCollection(randCardIndex);
     }
 
     public void printCollection() {

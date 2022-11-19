@@ -1,3 +1,5 @@
+package Game;
+
 public class CardRepository extends CardCollection {
 
     public CardRepository() {

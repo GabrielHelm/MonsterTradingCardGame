@@ -1,7 +1,9 @@
-public class Card {
-    private String name;
-    private final Integer damage;
-    private ElementType element;
+package Game;
+
+public abstract class Card {
+    protected String name;
+    protected final Integer damage;
+    protected ElementType element;
 
     public String getName() {
         return name;
@@ -28,5 +30,6 @@ public class Card {
         this.damage = damage;
         setElement(element);
     }
+    public abstract double getCalculatedDamage(Card enemy);
 
 }

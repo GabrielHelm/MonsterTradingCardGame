@@ -1,3 +1,5 @@
+package Game;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,30 +45,17 @@ public class Game {
     public void play()
     {
         for (int i = 0; i < 4; i++) {
-            playRound(user1.getDeck().getRandomCardFromCollection(), user2.getDeck().getRandomCardFromCollection());
+            playRound();
         }
         printLog();
     }
 
-    public void playRound(Card card1, Card card2)
+    public void playRound()
     {
-        User user1 = getUser1();
-        User user2 = getUser2();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(user1.getUsername());
-        stringBuilder.append(": ");
-        stringBuilder.append(card1.getName());
-        stringBuilder.append(" (");
-        stringBuilder.append(card1.getDamage());
-        stringBuilder.append(") Damage vs. ");
-
-        stringBuilder.append(user2.getUsername());
-        stringBuilder.append(": ");
-        stringBuilder.append(card2.getName());
-        stringBuilder.append(" (");
-        stringBuilder.append(card2.getDamage());
-        stringBuilder.append(") Damage");
-
-        log.add(stringBuilder.toString());
+        Fight fight = new Fight();
+        String logLine = fight.fightOneRound(user1, user2);
+        log.add(logLine);
     }
+
+
 }
