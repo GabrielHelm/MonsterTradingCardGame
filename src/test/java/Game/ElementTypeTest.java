@@ -1,16 +1,20 @@
 package Game;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ElementTypeTest {
 
+    ElementType elementType1;
+    ElementType elementType2;
+
     @Test
     void testFirevsNormal()
     {
-        ElementType elementType1 = ElementType.fire;
-        ElementType elementType2 = ElementType.normal;
+        elementType1 = ElementType.fire;
+        elementType2 = ElementType.normal;
 
         double Modifier = elementType1.getModifier(elementType2);
 
@@ -20,8 +24,8 @@ class ElementTypeTest {
     @Test
     void testNormalvsFire()
     {
-        ElementType elementType1 = ElementType.normal;
-        ElementType elementType2 = ElementType.fire;
+        elementType1 = ElementType.normal;
+        elementType2 = ElementType.fire;
 
         double Modifier = elementType1.getModifier(elementType2);
 
@@ -31,8 +35,8 @@ class ElementTypeTest {
     @Test
     void testFirevsFire()
     {
-        ElementType elementType1 = ElementType.fire;
-        ElementType elementType2 = ElementType.fire;
+        elementType1 = ElementType.fire;
+        elementType2 = ElementType.fire;
 
         double Modifier = elementType1.getModifier(elementType2);
 

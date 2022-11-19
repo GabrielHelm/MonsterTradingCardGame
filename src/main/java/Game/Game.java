@@ -44,10 +44,18 @@ public class Game {
 
     public void play()
     {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 1; i <= 100; i++) {
             playRound();
+            if(user1.getDeck().collection.isEmpty() || user2.getDeck().collection.isEmpty())
+            {
+                break;
+            }
         }
         printLog();
+        System.out.println("User 1:");
+        user1.getDeck().printCollection();
+        System.out.println("User 2:");
+        user2.getDeck().printCollection();
     }
 
     public void playRound()
@@ -56,6 +64,4 @@ public class Game {
         String logLine = fight.fightOneRound(user1, user2);
         log.add(logLine);
     }
-
-
 }

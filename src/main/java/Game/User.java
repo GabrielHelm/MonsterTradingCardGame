@@ -56,10 +56,21 @@ public class User {
     public void setDeck(CardCollection deck) {
         Deck = deck;
     }
-    public User(String username, Integer elo) {
+
+    public User(String username, String password, Integer elo) {
         setCoins(20);
         setUsername(username);
+        setPassword(password);
         setElo(elo);
+        CardRepository cardRepository = new CardRepository();
+        Stack = cardRepository.getPackageFromCollection();
+        Deck = new CardCollection();
+    }
+    public User() {
+        setCoins(20);
+        setUsername("DefaultUser");
+        setPassword("1234");
+        setElo(100);
         CardRepository cardRepository = new CardRepository();
         Stack = cardRepository.getPackageFromCollection();
         Deck = new CardCollection();
@@ -67,20 +78,26 @@ public class User {
 
     public void chooseCards() {
         for (int i = 0; i < 4; i++) {
-            int CardIndex;
-            Scanner in = new Scanner(System.in);
-            do {
-                System.out.println("Choose 1 of the following Cards to put it in your Deck:");
-                Stack.printCollection();
-                while(!in.hasNextInt()) {
-                    System.out.println("Please enter a number!");
-                    in.next();
-                }
-                CardIndex = in.nextInt();
-            } while(CardIndex < 0 || CardIndex > (5 - i));
-            Deck.addCardToCollection(Stack.getAndRemoveCardFromCollection(CardIndex-1));
+            int cardindex = UserInputChooseCardIndex();
+            Deck.addCardToCollection(Stack.getAndRemoveCardFromCollection(cardindex-1));
         }
         System.out.println("Your current Deck:");
         Deck.printCollection();
+    }
+
+    public int UserInputChooseCardIndex()
+    {
+        int cardIndex;
+        Scanner in = new Scanner(System.in);
+        System.out.println("Choose 1 of the following Cards to put it in your Deck:");
+        Stack.printCollection();
+        while(!in.hasNextInt()) {
+            System.out.println("Please enter a number!");
+            if(in.hasNext()) {
+                in.next();
+            }
+        }
+        cardIndex = in.nextInt();
+        return cardIndex;
     }
 }
