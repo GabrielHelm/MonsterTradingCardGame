@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class CardCollection {
 
-    protected List<Card> collection = new ArrayList<>();
+    private List<Card> collection = new ArrayList<>();
 
     public List<Card> getCollection() {
         return collection;
@@ -36,6 +36,16 @@ public class CardCollection {
     public Card getCardFromCollection(int CardIndex)
     {
         return collection.get(CardIndex);
+    }
+
+    public int getCollectionSize()
+    {
+        return collection.size();
+    }
+
+    public boolean checkIfCollectionIsEmpty()
+    {
+        return collection.isEmpty();
     }
 
     public Card getAndRemoveRandomCardFromCollection() {

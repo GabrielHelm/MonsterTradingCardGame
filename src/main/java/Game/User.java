@@ -77,27 +77,31 @@ public class User {
     }
 
     public void chooseCards() {
+
+        Scanner in = new Scanner(System.in);
         for (int i = 0; i < 4; i++) {
-            int cardindex = UserInputChooseCardIndex();
+            int cardindex = UserInputChooseCardIndex(in);
             Deck.addCardToCollection(Stack.getAndRemoveCardFromCollection(cardindex-1));
         }
         System.out.println("Your current Deck:");
         Deck.printCollection();
     }
 
-    public int UserInputChooseCardIndex()
+    public int UserInputChooseCardIndex(Scanner in)
     {
         int cardIndex;
-        Scanner in = new Scanner(System.in);
-        System.out.println("Choose 1 of the following Cards to put it in your Deck:");
-        Stack.printCollection();
-        while(!in.hasNextInt()) {
-            System.out.println("Please enter a number!");
-            if(in.hasNext()) {
-                in.next();
+        do {
+            System.out.println("Choose 1 of the following Cards to put it in your Deck:");
+            Stack.printCollection();
+            while(!in.hasNextInt()) {
+                System.out.println("Please enter a number!");
+                if(in.hasNext()) {
+                    in.next();
+                }
             }
-        }
-        cardIndex = in.nextInt();
+            cardIndex = in.nextInt();
+        } while(cardIndex <= 0 || cardIndex > Stack.getCollectionSize());
+
         return cardIndex;
     }
 }

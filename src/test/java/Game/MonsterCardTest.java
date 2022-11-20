@@ -4,18 +4,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class MonsterCardTest {
     MonsterCard monsterCard;
     MonsterCard enemyMonsterCard;
-
-    SpellCard enemySpellCard;
+    private static final SpellCard enemySpellCard = mock(SpellCard.class);
 
     @BeforeEach
     void init() {
         monsterCard = new MonsterCard("Dragon", 10, ElementType.fire);
         enemyMonsterCard = new MonsterCard("Org", 10, ElementType.normal);
-        enemySpellCard = new SpellCard("normalSpell", 10, ElementType.normal);
     }
 
     @Test
@@ -27,6 +27,7 @@ class MonsterCardTest {
 
     @Test
     void testCalculatedDamageWithSpellCardAndMonsterCard() {
+        when(enemySpellCard.getElement()).thenReturn(ElementType.normal);
         double calculatedDamage = monsterCard.getCalculatedDamage(enemySpellCard);
 
         assertEquals(20, calculatedDamage);

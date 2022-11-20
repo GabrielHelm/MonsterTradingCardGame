@@ -46,7 +46,7 @@ public class Game {
     {
         for (int i = 1; i <= 100; i++) {
             playRound();
-            if(user1.getDeck().collection.isEmpty() || user2.getDeck().collection.isEmpty())
+            if(user1.getDeck().checkIfCollectionIsEmpty() || user2.getDeck().checkIfCollectionIsEmpty())
             {
                 break;
             }

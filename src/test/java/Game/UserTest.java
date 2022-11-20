@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,7 +37,7 @@ class UserTest {
 
     @Test
     void testStackSize() {
-        assertEquals(5, user1.getStack().collection.size());
+        assertEquals(5, user1.getStack().getCollectionSize());
     }
 
     @Test
@@ -45,22 +46,64 @@ class UserTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
-        int Userinput = user1.UserInputChooseCardIndex();
+        Scanner sc = new Scanner(System.in);
+
+        int Userinput = user1.UserInputChooseCardIndex(sc);
 
         assertEquals(1, Userinput);
     }
 
     @Test
-    void testFalseUserInput() {
-        String input = "g";
+    void testFalseIntoCorrectUserInput() {
+        String input = "g" + System.getProperty("line.separator") + "1";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
-        String input2 = "1";
-        InputStream in2= new ByteArrayInputStream(input2.getBytes());
-        System.setIn(in2);
+        Scanner sc = new Scanner(System.in);
 
-        int Userinput = user1.UserInputChooseCardIndex();
+        int Userinput = user1.UserInputChooseCardIndex(sc);
 
         assertEquals(1, Userinput);
+    }
+
+    @Test
+    void testStackAndDeckAfterTheUserChoseCards() {
+        String input = "";
+        for(int i = 0; i < 4; i++) {
+            input += ("1" + System.getProperty("line.separator"));
+        }
+
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        user1.chooseCards();
+
+        assertEquals(4, user1.getDeck().getCollectionSize());
+        assertEquals(1, user1.getStack().getCollectionSize());
+    }
+
+    @Test
+    void testStackAndDeckAfterTheUserChoseCardsWithAnInvalidInput() {
+        String input = "-1" + System.getProperty("line.separator");
+        for(int i = 0; i < 3; i++) {
+            input += ("1" + System.getProperty("line.separator"));
+        }
+        input += "5" + System.getProperty("line.separator") + "1";
+
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        user1.chooseCards();
+
+        assertEquals(4, user1.getDeck().getCollectionSize());
+        assertEquals(1, user1.getStack().getCollectionSize());
+    }
+
+    @Test
+    void testIfStackIsEmpty() {
+
+        for (int i = 0; i < 5; i++) {
+            user1.getStack().getAndRemoveRandomCardFromCollection();
+        }
+        assertTrue(user1.getStack().checkIfCollectionIsEmpty());
     }
 }

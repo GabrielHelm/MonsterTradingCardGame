@@ -11,7 +11,7 @@ public class MonsterCard extends Card{
             return damage;
         }
         else {
-            double Modifier = element.getModifier(enemy.element);
+            double Modifier = element.getModifier(enemy.getElement());
             return damage * Modifier;
         }
     }
