@@ -10,12 +10,13 @@ import static org.mockito.Mockito.when;
 class MonsterCardTest {
     MonsterCard monsterCard;
     MonsterCard enemyMonsterCard;
-    private static final SpellCard enemySpellCard = mock(SpellCard.class);
+    SpellCard enemySpellCard;
 
     @BeforeEach
     void init() {
         monsterCard = new MonsterCard("Dragon", 10, ElementType.fire);
         enemyMonsterCard = new MonsterCard("Org", 10, ElementType.normal);
+        enemySpellCard = new SpellCard("Spell1", 10, ElementType.normal);
     }
 
     @Test
@@ -27,7 +28,6 @@ class MonsterCardTest {
 
     @Test
     void testCalculatedDamageWithSpellCardAndMonsterCard() {
-        when(enemySpellCard.getElement()).thenReturn(ElementType.normal);
         double calculatedDamage = monsterCard.getCalculatedDamage(enemySpellCard);
 
         assertEquals(20, calculatedDamage);

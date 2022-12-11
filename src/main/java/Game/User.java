@@ -7,8 +7,8 @@ public class User {
     private String password;
     private Integer coins;
     private Integer elo;
-    private CardCollection Stack;
-    private CardCollection Deck;
+    private CardCollection stack;
+    private CardCollection deck;
     public String getUsername() {
         return username;
     }
@@ -42,19 +42,19 @@ public class User {
     }
 
     public CardCollection getStack() {
-        return Stack;
+        return stack;
     }
 
     public void setStack(CardCollection stack) {
-        Stack = stack;
+        this.stack = stack;
     }
 
     public CardCollection getDeck() {
-        return Deck;
+        return deck;
     }
 
     public void setDeck(CardCollection deck) {
-        Deck = deck;
+        this.deck = deck;
     }
 
     public User(String username, String password, Integer elo) {
@@ -63,8 +63,8 @@ public class User {
         setPassword(password);
         setElo(elo);
         CardRepository cardRepository = new CardRepository();
-        Stack = cardRepository.getPackageFromCollection();
-        Deck = new CardCollection();
+        stack = cardRepository.getPackageFromCollection();
+        deck = new CardCollection();
     }
     public User() {
         setCoins(20);
@@ -72,8 +72,8 @@ public class User {
         setPassword("1234");
         setElo(100);
         CardRepository cardRepository = new CardRepository();
-        Stack = cardRepository.getPackageFromCollection();
-        Deck = new CardCollection();
+        stack = cardRepository.getPackageFromCollection();
+        deck = new CardCollection();
     }
 
     public void chooseCards() {
@@ -81,10 +81,10 @@ public class User {
         Scanner in = new Scanner(System.in);
         for (int i = 0; i < 4; i++) {
             int cardindex = UserInputChooseCardIndex(in);
-            Deck.addCardToCollection(Stack.getAndRemoveCardFromCollection(cardindex-1));
+            deck.addCardToCollection(stack.getAndRemoveCardFromCollection(cardindex-1));
         }
         System.out.println("Your current Deck:");
-        Deck.printCollection();
+        deck.printCollection();
     }
 
     public int UserInputChooseCardIndex(Scanner in)
@@ -92,7 +92,7 @@ public class User {
         int cardIndex;
         do {
             System.out.println("Choose 1 of the following Cards to put it in your Deck:");
-            Stack.printCollection();
+            stack.printCollection();
             while(!in.hasNextInt()) {
                 System.out.println("Please enter a number!");
                 if(in.hasNext()) {
@@ -100,7 +100,7 @@ public class User {
                 }
             }
             cardIndex = in.nextInt();
-        } while(cardIndex <= 0 || cardIndex > Stack.getCollectionSize());
+        } while(cardIndex <= 0 || cardIndex > stack.getCollectionSize());
 
         return cardIndex;
     }

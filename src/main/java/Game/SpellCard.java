@@ -7,7 +7,7 @@ public class SpellCard extends Card{
 
     public double getCalculatedDamage(Card enemy)
     {
-        double Modifier = element.getModifier(enemy.getElement());
-        return damage * Modifier;
+        double modifier = element.getModifier(enemy.getElement());
+        return damage * modifier;
     }
 }
