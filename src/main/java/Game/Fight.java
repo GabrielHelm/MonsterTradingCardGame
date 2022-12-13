@@ -1,13 +1,16 @@
 package Game;
 
+import Game.Card.Card;
+import Game.Card.CardCollection;
+
 public class Fight {
 
     String logLine;
 
-    public String fightOneRound(User user1, User user2) {
+    public String fightOneRound(Player player1, Player player2) {
 
-        CardCollection User1Deck = user1.getDeck();
-        CardCollection User2Deck = user2.getDeck();
+        CardCollection User1Deck = player1.getDeck();
+        CardCollection User2Deck = player2.getDeck();
 
         Card card1 = User1Deck.getAndRemoveRandomCardFromCollection();
         Card card2 = User2Deck.getAndRemoveRandomCardFromCollection();
@@ -15,7 +18,7 @@ public class Fight {
         double card1CalculatedDamage = card1.getCalculatedDamage(card2);
         double card2CalculatedDamage = card2.getCalculatedDamage(card1);
 
-        SetLogLine(card1, card2, user1, user2);
+        SetLogLine(card1, card2, player1, player2);
 
         if(card1CalculatedDamage > card2CalculatedDamage) {
             User1Deck.addCardToCollection(card1);
@@ -34,16 +37,16 @@ public class Fight {
         return logLine;
     }
 
-    public void SetLogLine(Card card1, Card card2, User user1, User user2) {
+    public void SetLogLine(Card card1, Card card2, Player player1, Player player2) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(user1.getUsername());
+        stringBuilder.append(player1.getUsername());
         stringBuilder.append(": ");
         stringBuilder.append(card1.getName());
         stringBuilder.append(" (");
         stringBuilder.append(card1.getDamage());
         stringBuilder.append(" Damage) vs. ");
 
-        stringBuilder.append(user2.getUsername());
+        stringBuilder.append(player2.getUsername());
         stringBuilder.append(": ");
         stringBuilder.append(card2.getName());
         stringBuilder.append(" (");

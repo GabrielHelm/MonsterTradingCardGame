@@ -1,4 +1,4 @@
-package Game;
+package Game.Card;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,11 @@ import java.util.Random;
 
 public class CardCollection {
 
-    private List<Card> collection = new ArrayList<>();
+    private String u_ID;
+    private List<Card> cards = new ArrayList<>();
 
-    public List<Card> getCollection() {
-        return collection;
+    public List<Card> getCards() {
+        return cards;
     }
 
     public CardCollection getPackageFromCollection() {
@@ -20,43 +21,51 @@ public class CardCollection {
         return Package;
     }
 
-    public void setCollection(List<Card> collection) {
-        this.collection = collection;
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
     }
 
     public void addCardToCollection(Card newCard) {
-        collection.add(newCard);
+        cards.add(newCard);
     }
 
     public Card getAndRemoveCardFromCollection(int CardIndex)
     {
-        return collection.remove(CardIndex);
+        return cards.remove(CardIndex);
     }
 
     public Card getCardFromCollection(int CardIndex)
     {
-        return collection.get(CardIndex);
+        return cards.get(CardIndex);
     }
 
     public int getCollectionSize()
     {
-        return collection.size();
+        return cards.size();
     }
 
     public boolean checkIfCollectionIsEmpty()
     {
-        return collection.isEmpty();
+        return cards.isEmpty();
     }
 
     public Card getAndRemoveRandomCardFromCollection() {
         Random rand = new Random();
-        int randCardIndex = rand.nextInt(collection.size());
+        int randCardIndex = rand.nextInt(cards.size());
         return getAndRemoveCardFromCollection(randCardIndex);
     }
 
     public void printCollection() {
-        for (int i = 0; i < collection.size(); i++) {
-            System.out.println(i+1 + ": " + collection.get(i).getName());
+        for (int i = 0; i < cards.size(); i++) {
+            System.out.println(i+1 + ": " + cards.get(i).getName());
         }
+    }
+
+    public String getU_ID() {
+        return u_ID;
+    }
+
+    public void setU_ID(String u_ID) {
+        this.u_ID = u_ID;
     }
 }

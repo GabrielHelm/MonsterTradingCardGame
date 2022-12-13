@@ -9,35 +9,35 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserTest {
+class PlayerTest {
 
-    User user1;
+    Player player1;
 
     @BeforeEach
     void init() {
-        user1 = new User();
+        player1 = new Player();
     }
 
     @Test
     void testDefaultUserInit() {
-        assertEquals("DefaultUser", user1.getUsername());
-        assertEquals("1234", user1.getPassword());
-        assertEquals(100, user1.getElo());
-        assertEquals(20, user1.getCoins());
+        assertEquals("DefaultUser", player1.getUsername());
+        assertEquals("1234", player1.getPassword());
+        assertEquals(100, player1.getElo());
+        assertEquals(20, player1.getCoins());
     }
 
     @Test
     void testCustomUserInit() {
-        user1 = new User("TestUser", "Password", 500);
-        assertEquals("TestUser", user1.getUsername());
-        assertEquals("Password", user1.getPassword());
-        assertEquals(500, user1.getElo());
-        assertEquals(20, user1.getCoins());
+        player1 = new Player("TestUser", "Password", 500);
+        assertEquals("TestUser", player1.getUsername());
+        assertEquals("Password", player1.getPassword());
+        assertEquals(500, player1.getElo());
+        assertEquals(20, player1.getCoins());
     }
 
     @Test
     void testStackSize() {
-        assertEquals(5, user1.getStack().getCollectionSize());
+        assertEquals(5, player1.getStack().getCollectionSize());
     }
 
     @Test
@@ -48,7 +48,7 @@ class UserTest {
 
         Scanner sc = new Scanner(System.in);
 
-        int Userinput = user1.UserInputChooseCardIndex(sc);
+        int Userinput = player1.UserInputChooseCardIndex(sc);
 
         assertEquals(1, Userinput);
     }
@@ -60,7 +60,7 @@ class UserTest {
         System.setIn(in);
         Scanner sc = new Scanner(System.in);
 
-        int Userinput = user1.UserInputChooseCardIndex(sc);
+        int Userinput = player1.UserInputChooseCardIndex(sc);
 
         assertEquals(1, Userinput);
     }
@@ -75,10 +75,10 @@ class UserTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
-        user1.chooseCards();
+        player1.chooseCards();
 
-        assertEquals(4, user1.getDeck().getCollectionSize());
-        assertEquals(1, user1.getStack().getCollectionSize());
+        assertEquals(4, player1.getDeck().getCollectionSize());
+        assertEquals(1, player1.getStack().getCollectionSize());
     }
 
     @Test
@@ -92,18 +92,18 @@ class UserTest {
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
 
-        user1.chooseCards();
+        player1.chooseCards();
 
-        assertEquals(4, user1.getDeck().getCollectionSize());
-        assertEquals(1, user1.getStack().getCollectionSize());
+        assertEquals(4, player1.getDeck().getCollectionSize());
+        assertEquals(1, player1.getStack().getCollectionSize());
     }
 
     @Test
     void testIfStackIsEmpty() {
 
         for (int i = 0; i < 5; i++) {
-            user1.getStack().getAndRemoveRandomCardFromCollection();
+            player1.getStack().getAndRemoveRandomCardFromCollection();
         }
-        assertTrue(user1.getStack().checkIfCollectionIsEmpty());
+        assertTrue(player1.getStack().checkIfCollectionIsEmpty());
     }
 }

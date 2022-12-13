@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private User user1;
-    private User user2;
+    private Player player1;
+    private Player player2;
     private List<String> log;
 
     public List<String> getLog() {
@@ -20,25 +20,25 @@ public class Game {
         log.forEach(System.out::println);
     }
 
-    public User getUser1() {
-        return user1;
+    public Player getUser1() {
+        return player1;
     }
 
-    public void setUser1(User user1) {
-        this.user1 = user1;
+    public void setUser1(Player player1) {
+        this.player1 = player1;
     }
 
-    public User getUser2() {
-        return user2;
+    public Player getUser2() {
+        return player2;
     }
 
-    public void setUser2(User user2) {
-        this.user2 = user2;
+    public void setUser2(Player player2) {
+        this.player2 = player2;
     }
 
-    public Game(User user1, User user2) {
-        this.user1 = user1;
-        this.user2 = user2;
+    public Game(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
         log = new ArrayList<>();
     }
 
@@ -46,22 +46,22 @@ public class Game {
     {
         for (int i = 1; i <= 100; i++) {
             playRound();
-            if(user1.getDeck().checkIfCollectionIsEmpty() || user2.getDeck().checkIfCollectionIsEmpty())
+            if(player1.getDeck().checkIfCollectionIsEmpty() || player2.getDeck().checkIfCollectionIsEmpty())
             {
                 break;
             }
         }
         printLog();
         System.out.println("User 1:");
-        user1.getDeck().printCollection();
+        player1.getDeck().printCollection();
         System.out.println("User 2:");
-        user2.getDeck().printCollection();
+        player2.getDeck().printCollection();
     }
 
     public void playRound()
     {
         Fight fight = new Fight();
-        String logLine = fight.fightOneRound(user1, user2);
+        String logLine = fight.fightOneRound(player1, player2);
         log.add(logLine);
     }
 }

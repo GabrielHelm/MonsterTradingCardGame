@@ -1,8 +1,18 @@
-package Game;
+package Game.Card;
 
+import Game.ElementType;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+@JsonIgnoreProperties({"element"})
 public abstract class Card {
+    @JsonProperty("Name")
     protected String name;
-    protected final Integer damage;
+    @JsonProperty("Damage")
+    protected Double damage;
+    @JsonProperty("Id")
+    protected String id;
+
     protected ElementType element;
 
     public String getName() {
@@ -13,23 +23,28 @@ public abstract class Card {
         this.name = name;
     }
 
-    public Integer getDamage() {
+    public Double getDamage() {
         return damage;
     }
 
     public ElementType getElement() {
         return element;
     }
+    public Card() {
+    }
 
     public void setElement(ElementType element) {
         this.element = element;
     }
 
-    public Card(String name, Integer damage, ElementType element) {
+    public Card(String name, Double damage, ElementType element, String id) {
         setName(name);
         this.damage = damage;
         setElement(element);
+        this.id = id;
     }
+
+
     public abstract double getCalculatedDamage(Card enemy);
 
 }
