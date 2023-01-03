@@ -1,6 +1,9 @@
 package http.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import game.router.Route;
+import game.router.RouteIdentifier;
+import game.router.Router;
 import http.controller.CardController;
 import http.controller.DeckController;
 import http.controller.PackageController;
@@ -18,6 +21,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class HttpServer {
+
+    private final Router router;
+
+    public HttpServer(Router router) {
+        this.router = router;
+    }
     public void start() {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
@@ -34,21 +43,30 @@ public class HttpServer {
 
                         final RequestContext requestContext = parseInput(br);
                         requestContext.print();
+
+                        final RouteIdentifier routeIdentifier = new RouteIdentifier(
+                                requestContext.getPath(),
+                                requestContext.getHttpVerb()
+                        );
+                        final Route route = router.findRoute(routeIdentifier);
                         Response response;
-
-                        Authentification authentification = new Authentification();
-                        if (authentification.authenticate(requestContext.getHeaders()) || "/users".equals(requestContext.getPath()) || "/sessions".equals(requestContext.getPath())) {
-
-                            try{
-                                response = routing(requestContext);
-                            }catch (BadRequestException badRequestException) {
-                                response = new Response(HttpStatus.BAD_REQUEST, badRequestException.getMessage());
-                            } catch (IllegalStateException e) {
-                                response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
-                            }
+                        if(route == null) {
+                            response = new Response();
+                            response.setBody("Route not found");
+                            response.setHttpStatus(HttpStatus.BAD_REQUEST);
                         } else {
-                            // set WWW-Authenticate header
-                            response = new Response(HttpStatus.UNAUTHORIZED);
+                            try {
+                                response = route.process(requestContext);
+                            } catch (BadRequestException badRequestException) {
+                                response = new Response();
+                                response.setBody(badRequestException.getMessage());
+                                response.setHttpStatus(HttpStatus.BAD_REQUEST);
+
+                            } catch (IllegalStateException e) {
+                                response = new Response();
+                                response.setBody(e.getMessage());
+                                response.setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+                            }
                         }
 
                         System.out.println(response.toString());
@@ -95,7 +113,7 @@ public class HttpServer {
         requestContext.setBody(new String(buffer));
         return requestContext;
     }
-
+/*
     public Response routing(RequestContext requestContext) {
         UserController userController;
         PackageController packageController = new PackageController();
@@ -136,4 +154,6 @@ public class HttpServer {
             throw new RuntimeException(e);
         }
     }
+    */
+
 }

@@ -1,10 +1,12 @@
 package http.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import game.Credentials;
 import game.Token;
 import game.User;
+import game.router.Controller;
+import game.router.Route;
+import game.router.RouteIdentifier;
+import game.util.Pair;
 import http.server.BadRequestException;
 import http.server.HttpStatus;
 import http.server.RequestContext;
@@ -12,13 +14,15 @@ import http.server.Response;
 import repository.TokenRepositoryImpl;
 import repository.UserRepositoryImpl;
 import repository.db.config.DatabaseConnection;
-import repository.db.config.DbConnector;
 import repository.interfaces.TokenRepository;
 import repository.interfaces.UserRepository;
 
-import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 
-public class UserController {
+import static game.router.RouteIdentifier.routeIdentifier;
+
+public class UserController implements Controller {
 
     private UserRepository userRepository
             = new UserRepositoryImpl(DatabaseConnection.getInstance());
@@ -29,7 +33,6 @@ public class UserController {
         Credentials credentials = requestContext.getBodyAs(Credentials.class);
         Response response;
 
-        // Postgres Aufruf
         User user = userRepository.findUserByUsername(credentials.getUsername());
         if (user != null) {
             throw new BadRequestException("User with username " + credentials.getUsername() + " already exists");
@@ -48,7 +51,6 @@ public class UserController {
         if (userRepository.checkCredentials(credentials)) {
             User user = userRepository.findUserByUsername(credentials.getUsername());
             user.generateToken();
-            // Token in Postgres speichern
             Token token = tokenRepository.getTokenFromTokenName(user.getToken().getName());
             if (token == null) {
                 tokenRepository.createTokenForUser(user);
@@ -63,6 +65,22 @@ public class UserController {
             response = new Response(HttpStatus.UNAUTHORIZED);
         }
         return response;
+    }
+
+    @Override
+    public List<Pair<RouteIdentifier, Route>> listRoutes() {
+        List<Pair<RouteIdentifier, Route>> userRoutes = new ArrayList<>();
+
+        userRoutes.add(new Pair<>(
+                routeIdentifier("/users", "POST"),
+                this::register
+        ));
+
+        userRoutes.add(new Pair<>(
+                routeIdentifier("/sessions", "POST"),
+                this::login
+        ));
+        return userRoutes;
     }
 
 }

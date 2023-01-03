@@ -39,14 +39,14 @@ public class Fight {
 
     public void SetLogLine(Card card1, Card card2, User user1, User user2) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(user1.getUsername());
+        stringBuilder.append(user1.getCredentials().getUsername());
         stringBuilder.append(": ");
         stringBuilder.append(card1.getName());
         stringBuilder.append(" (");
         stringBuilder.append(card1.getDamage());
         stringBuilder.append(" Damage) vs. ");
 
-        stringBuilder.append(user2.getUsername());
+        stringBuilder.append(user2.getCredentials().getUsername());
         stringBuilder.append(": ");
         stringBuilder.append(card2.getName());
         stringBuilder.append(" (");

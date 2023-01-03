@@ -1,17 +1,21 @@
 package game.card;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-@JsonIgnoreProperties({"element"})
-public abstract class Card {
+@JsonIgnoreProperties({"element", "cardType"})
+public class Card {
     @JsonProperty("Name")
-    protected String name;
+    private String name;
     @JsonProperty("Damage")
-    protected Double damage;
-    @JsonProperty("Id")
-    protected String id;
+    private Double damage;
 
-    protected ElementType element;
+    @JsonProperty("Id")
+    private String id;
+
+    private ElementType element;
+
+    private CardType cardType;
 
     public String getName() {
         return name;
@@ -24,6 +28,18 @@ public abstract class Card {
     public Double getDamage() {
         return damage;
     }
+    @JsonProperty("Id")
+    public String getId() {
+        return id;
+    }
+
+    public CardType getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
+    }
 
     public ElementType getElement() {
         return element;
@@ -35,14 +51,44 @@ public abstract class Card {
         this.element = element;
     }
 
-    public Card(String name, Double damage, ElementType element, String id) {
-        setName(name);
+    public Card(String name, Double damage, ElementType element, String id, CardType cardType) {
+        this.name = name;
         this.damage = damage;
-        setElement(element);
+        this.element = element;
         this.id = id;
+        this.cardType = cardType;
+    }
+
+    @JsonCreator
+    public Card(@JsonProperty("id") String id, @JsonProperty("Name") String name, @JsonProperty("Damage") Double damage) {
+        this.id = id;
+        this.name = name;
+        this.damage = damage;
+
+        if(name.contains("Spell")) {
+            this.cardType = CardType.spell;
+        } else {
+            this.cardType = CardType.monster;
+        }
+
+        if(name.startsWith("Fire")) {
+            this.element = ElementType.fire;
+        } else if(name.startsWith("Water")) {
+            this.element = ElementType.water;
+        } else {
+            this.element = ElementType.normal;
+        }
     }
 
 
-    public abstract double getCalculatedDamage(Card enemy);
+    public double getCalculatedDamage(Card enemy) {
+        if(cardType == CardType.monster && enemy.cardType == CardType.monster) {
+            return damage;
+        }
+        else {
+            double modifier = element.getModifier(enemy.getElement());
+            return damage * modifier;
+        }
+    }
 
 }

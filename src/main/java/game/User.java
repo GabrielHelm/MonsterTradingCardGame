@@ -5,9 +5,8 @@ import game.card.CardRepository;
 
 import java.util.Scanner;
 
-public class User extends Credentials{
-
-
+public class User{
+    private Credentials credentials;
     private Token token;
     private Integer coins;
     private Integer elo;
@@ -37,7 +36,13 @@ public class User extends Credentials{
     public void setStack(CardCollection stack) {
         this.stack = stack;
     }
+    public Credentials getCredentials() {
+        return credentials;
+    }
 
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
 
     public Token getToken() {
         return token;
@@ -56,8 +61,9 @@ public class User extends Credentials{
     }
 
     public User(String username, String password, Integer elo) {
-        setUsername(username);
-        setPassword(password);
+        credentials = new Credentials();
+        credentials.setUsername(username);
+        credentials.setPassword(password);
         setCoins(20);
         setElo(elo);
         CardRepository cardRepository = new CardRepository();
@@ -66,8 +72,9 @@ public class User extends Credentials{
     }
     public User() {
         setCoins(20);
-        setUsername("DefaultUser");
-        setPassword("1234");
+        credentials = new Credentials();
+        credentials.setUsername("DefaultUser");
+        credentials.setPassword("1234");
         setElo(100);
         CardRepository cardRepository = new CardRepository();
         stack = cardRepository.getPackageFromCollection();

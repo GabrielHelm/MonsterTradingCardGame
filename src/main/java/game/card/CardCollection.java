@@ -57,7 +57,7 @@ public class CardCollection {
 
     public void printCollection() {
         for (int i = 0; i < cards.size(); i++) {
-            System.out.println(i+1 + ": " + cards.get(i).getName());
+            System.out.println(i+1 + ": " + cards.get(i).getName() + " Element: " + cards.get(i).getElement() + " Damage: " + cards.get(i).getDamage() + " Id: " + cards.get(i).getId() + " CardType: " + cards.get(i).getCardType());
         }
     }
 

@@ -53,7 +53,7 @@ public class TokenRepositoryImpl implements TokenRepository {
         try (Connection c = dataSource.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(INSERT_TOKEN_SQL)) {
                 user.generateToken();
-                ps.setString(1, user.getUsername());
+                ps.setString(1, user.getCredentials().getUsername());
                 ps.setString(2, user.getToken().getName());
                 ps.setTimestamp(3, user.getToken().getValid_until());
                 ps.executeUpdate();
@@ -74,7 +74,7 @@ public class TokenRepositoryImpl implements TokenRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Failed to create token", e);
+            throw new IllegalStateException("Failed to get token", e);
         }
         return null;
     }
@@ -97,7 +97,7 @@ public class TokenRepositoryImpl implements TokenRepository {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Failed to create token", e);
+            throw new IllegalStateException("Failed to get username", e);
         }
         return null;
     }
@@ -112,7 +112,7 @@ public class TokenRepositoryImpl implements TokenRepository {
                 ps.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Failed to create token", e);
+            throw new IllegalStateException("Failed to update token", e);
         }
     }
 

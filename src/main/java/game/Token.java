@@ -14,7 +14,7 @@ public class Token {
     private Timestamp valid_until;
 
     public Token(User user) {
-        this.name = user.getUsername() + "-mtcgToken";
+        this.name = user.getCredentials().getUsername() + "-mtcgToken";
         this.valid_until = new Timestamp(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5));
     }
 
