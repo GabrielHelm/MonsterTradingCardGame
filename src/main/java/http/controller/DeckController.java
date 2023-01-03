@@ -1,14 +1,12 @@
 package http.controller;
 
-import Game.Card.CardCollection;
-import Game.Card.CardRepository;
+import game.card.CardCollection;
+import game.card.CardRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import http.HttpStatus;
-import http.RequestContext;
-import http.Response;
+import http.server.HttpStatus;
+import http.server.Response;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +32,7 @@ public class DeckController {
     }
 
     public Response configurateDeck(String deckData) {
-        Response response = new Response(HttpStatus.BAD_REQUEST);
+        Response response;
 
         // Convert body to List
         deckData = deckData.replace("[", "").replace("]", "");
@@ -46,6 +44,8 @@ public class DeckController {
             // create new Deck
             // add DeckId to cards
             response = new Response(HttpStatus.OK);
+        } else {
+            response = new Response(HttpStatus.BAD_REQUEST);
         }
 
         return response;

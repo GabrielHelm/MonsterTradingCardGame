@@ -1,40 +1,67 @@
 package http.controller;
 
-import Game.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import http.HttpStatus;
-import http.Response;
+import game.Credentials;
+import game.Token;
+import game.User;
+import http.server.BadRequestException;
+import http.server.HttpStatus;
+import http.server.RequestContext;
+import http.server.Response;
+import repository.TokenRepositoryImpl;
+import repository.UserRepositoryImpl;
+import repository.db.config.DatabaseConnection;
+import repository.db.config.DbConnector;
+import repository.interfaces.TokenRepository;
+import repository.interfaces.UserRepository;
+
+import javax.sql.DataSource;
 
 public class UserController {
 
-    public Response register(String registerData) throws JsonProcessingException {
-        User user = new ObjectMapper().readValue(registerData, User.class);
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
+    private UserRepository userRepository
+            = new UserRepositoryImpl(DatabaseConnection.getInstance());
+    private TokenRepository tokenRepository
+            = new TokenRepositoryImpl(DatabaseConnection.getInstance());
+
+    public Response register(RequestContext requestContext) {
+        Credentials credentials = requestContext.getBodyAs(Credentials.class);
+        Response response;
 
         // Postgres Aufruf
+        User user = userRepository.findUserByUsername(credentials.getUsername());
+        if (user != null) {
+            throw new BadRequestException("User with username " + credentials.getUsername() + " already exists");
+        } else {
+            userRepository.create(credentials);
+            response = new Response(HttpStatus.CREATED);
+        }
 
-        Response response;
-        // erfolgreich User erstellt
-        response = new Response(HttpStatus.CREATED);
-        // nicht erfolgreich - User existiert schon
-        response = new Response(HttpStatus.BAD_REQUEST);
         return response;
     }
 
-    public Response login(String loginData) throws JsonProcessingException {
-        User user = new ObjectMapper().readValue(loginData, User.class);
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
-
+    public Response login(RequestContext requestContext) {
         Response response;
-        // User erfolgreich eingeloggt
+        Credentials credentials = requestContext.getBodyAs(Credentials.class);
+
+        if (userRepository.checkCredentials(credentials)) {
+            User user = userRepository.findUserByUsername(credentials.getUsername());
             user.generateToken();
             // Token in Postgres speichern
-            response = new Response(HttpStatus.CREATED, "\"Token\":\"" + user.getToken() + "\"");
-        // nicht erfolgreich
-            //response = new Response(HttpStatus.FORBIDDEN);
+            Token token = tokenRepository.getTokenFromTokenName(user.getToken().getName());
+            if (token == null) {
+                tokenRepository.createTokenForUser(user);
+            } else {
+                tokenRepository.updateTokenTimestamp(token);
+            }
+
+            response = new Response(HttpStatus.OK, "\"Token\": \"Basic " + user.getToken().getName() + "\"");
+        } else {
+            // nicht erfolgreich
+            // set WWW-Authenticate header
+            response = new Response(HttpStatus.UNAUTHORIZED);
+        }
         return response;
     }
 

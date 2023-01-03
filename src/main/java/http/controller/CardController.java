@@ -1,11 +1,11 @@
 package http.controller;
 
-import Game.Card.CardCollection;
-import Game.Card.CardRepository;
+import game.card.CardCollection;
+import game.card.CardRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import http.HttpStatus;
-import http.Response;
+import http.server.HttpStatus;
+import http.server.Response;
 
 public class CardController {
     public Response getCards() throws JsonProcessingException {

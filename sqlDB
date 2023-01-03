@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTSUsers (
+    Name varchar(255),
+    Password varchar(255) NOT NULL,
+    PRIMARY KEY (Name)
+);
+
+CREATE TABLE IF NOT EXISTS auth_token (
+    Name varchar(255),
+    Token varchar(255),
+    valid_until timestamp NOT NULL,
+    PRIMARY KEY (Name),
+    FOREIGN KEY (Name) REFERENCES Users (Name)
+);

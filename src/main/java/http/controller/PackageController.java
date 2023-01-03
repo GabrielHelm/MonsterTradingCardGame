@@ -1,13 +1,13 @@
 package http.controller;
 
-import Game.Card.Card;
-import Game.Card.CardCollection;
-import Game.Card.CardRepository;
-import Game.Card.MonsterCard;
+import game.card.Card;
+import game.card.CardCollection;
+import game.card.CardRepository;
+import game.card.MonsterCard;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import http.HttpStatus;
-import http.Response;
+import http.server.HttpStatus;
+import http.server.Response;
 
 import java.io.IOException;
 import java.util.Arrays;
