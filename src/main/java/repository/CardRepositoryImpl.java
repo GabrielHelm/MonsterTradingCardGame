@@ -21,7 +21,7 @@ public class CardRepositoryImpl implements CardRepository {
             """;
 
     private static final String SELECT_CARD_SQL = """
-                SELECT FROM cards (name, damage , element, id, cardType) WHERE id = ?
+                SELECT name, damage , element, id, cardType FROM cards WHERE id = ?
             """;
     private static final String SETUP_TABLE = """
                 CREATE TABLE IF NOT EXISTS cards (

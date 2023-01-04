@@ -62,6 +62,10 @@ public class HttpServer {
                                 response.setBody(badRequestException.getMessage());
                                 response.setHttpStatus(HttpStatus.BAD_REQUEST);
 
+                            } catch (UnauthorizedException e) {
+                                response = new Response();
+                                response.setBody(e.getMessage());
+                                response.setHttpStatus(HttpStatus.UNAUTHORIZED);
                             } catch (IllegalStateException e) {
                                 response = new Response();
                                 response.setBody(e.getMessage());

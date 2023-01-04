@@ -60,12 +60,12 @@ public class User{
         this.deck = deck;
     }
 
-    public User(String username, String password, Integer elo) {
+    public User(String username, String password, Integer coins) {
         credentials = new Credentials();
         credentials.setUsername(username);
         credentials.setPassword(password);
-        setCoins(20);
-        setElo(elo);
+        setCoins(coins);
+        setElo(500);
         CardRepository cardRepository = new CardRepository();
         stack = cardRepository.getPackageFromCollection();
         deck = new CardCollection();

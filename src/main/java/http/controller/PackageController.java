@@ -23,14 +23,19 @@ import java.util.UUID;
 import static game.router.RouteIdentifier.routeIdentifier;
 
 public class PackageController implements Controller {
+    private CardRepository cardRepository
+            = new CardRepositoryImpl(DatabaseConnection.getInstance());
 
     private PackageRepository packageRepository
             = new PackageRepositoryImpl(DatabaseConnection.getInstance());
-    private CardRepository cardRepository
-            = new CardRepositoryImpl(DatabaseConnection.getInstance());
+
+    private AuthenticateController authenticateController = new AuthenticateController();
     public Response createPackage(RequestContext requestContext) {
 
         Response response;
+
+        String username = authenticateController.Authenticate(requestContext);
+
         String uniqueID = UUID.randomUUID().toString();
 
         List<Card> cards = Arrays.asList(requestContext.getBodyAs(Card[].class));
@@ -41,14 +46,13 @@ public class PackageController implements Controller {
         cardCollection.printCollection();
         System.out.println("UID = " + cardCollection.getU_ID());
 
-        // Postgres Aufruf
         for (Card card : cards) {
-            // check if card exists
-            cardRepository.createCard(card);
+            Card cardFromDB = cardRepository.getCard(card.getId());
+            if(cardFromDB == null) {
+                cardRepository.createCard(card);
+            }
         }
-        //check if package exists
         packageRepository.createPackage(cardCollection);
-
 
         response = new Response(HttpStatus.CREATED);
         return response;
@@ -59,7 +63,14 @@ public class PackageController implements Controller {
 
         // check if User has enough coins
 
-        Response response = new Response();
+        Response response = new Response(HttpStatus.OK);
+
+        String username = authenticateController.Authenticate(requestContext);
+        System.out.println(username);
+
+        List<String> cardIDs = packageRepository.getCardIdsFromRandomPackage();
+
+        System.out.println(cardIDs);
         // Postgres get random PackageID
 
         // get cards from Package

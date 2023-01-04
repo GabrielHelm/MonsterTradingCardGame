@@ -72,4 +72,16 @@ public class RequestContext {
             throw new BadRequestException(e.getMessage());
         }
     }
+    public String getToken() {
+        String rawtoken = "";
+        for (Header header : headers) {
+            if (header.getName().equals("Authorization")) {
+                rawtoken = header.getValue();
+            }
+        }
+        if(rawtoken.isEmpty()) {
+            throw new UnauthorizedException("Authorization failed");
+        }
+        return rawtoken.split(" ")[1];
+    }
 }
