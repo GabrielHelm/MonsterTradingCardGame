@@ -9,7 +9,6 @@ public class User{
     private Credentials credentials;
     private Token token;
     private Integer coins;
-    private Integer elo;
     private CardCollection stack;
     private CardCollection deck;
 
@@ -19,14 +18,6 @@ public class User{
 
     public void setCoins(Integer coins) {
         this.coins = coins;
-    }
-
-    public Integer getElo() {
-        return elo;
-    }
-
-    public void setElo(Integer elo) {
-        this.elo = elo;
     }
 
     public CardCollection getStack() {
@@ -65,7 +56,6 @@ public class User{
         credentials.setUsername(username);
         credentials.setPassword(password);
         setCoins(coins);
-        setElo(500);
         CardRepository cardRepository = new CardRepository();
         stack = cardRepository.getPackageFromCollection();
         deck = new CardCollection();
@@ -75,7 +65,6 @@ public class User{
         credentials = new Credentials();
         credentials.setUsername("DefaultUser");
         credentials.setPassword("1234");
-        setElo(100);
         CardRepository cardRepository = new CardRepository();
         stack = cardRepository.getPackageFromCollection();
         deck = new CardCollection();

@@ -1,53 +1,142 @@
 package http.controller;
 
+import game.card.Card;
 import game.card.CardCollection;
-import game.card.CardRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import game.router.Controller;
+import game.router.Route;
+import game.router.RouteIdentifier;
+import game.util.Pair;
 import http.server.HttpStatus;
+import http.server.RequestContext;
 import http.server.Response;
+import repository.interfaces.CardRepository;
+import repository.interfaces.UserCardsRepository;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class DeckController {
+import static game.router.RouteIdentifier.routeIdentifier;
 
-    public Response getDeck() throws JsonProcessingException {
+public class DeckController implements Controller {
 
-        // Authentication Method - get Username in return
+    AuthenticateController authenticateController;
 
-        // get id from User Deck
-        // get Cards in the User Deck
-        CardRepository cardRepository = new CardRepository();
-        CardCollection cardCollection = cardRepository.getPackageFromCollection();
+    UserCardsRepository userCardsRepository;
 
-        //Creating the ObjectMapper object
-        ObjectMapper mapper = new ObjectMapper();
-        //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(cardCollection.getCards());
+    CardRepository cardRepository;
 
-        Response response = new Response(HttpStatus.OK, jsonString);
-
-        return response;
+    public DeckController(AuthenticateController authenticateController, UserCardsRepository userCardsRepository, CardRepository cardRepository) {
+        this.authenticateController = authenticateController;
+        this.userCardsRepository = userCardsRepository;
+        this.cardRepository = cardRepository;
     }
 
-    public Response configurateDeck(String deckData) {
-        Response response;
+
+    public Response getCardsFromDeckAsJSON(RequestContext requestContext) {
+
+        String username = authenticateController.Authenticate(requestContext);
+
+        // get cards from user deck
+        List<String> cardIds = userCardsRepository.getAllCardIdsFromUserDeck(username);
+
+        // user deck has no cards response
+        if(cardIds.isEmpty()) {
+            return new Response(HttpStatus.NO_CONTENT, "The request was fine, but the deck doesn't have any cards");
+        }
+        // get cards from cardRepository
+        CardCollection cardCollection = new CardCollection();
+        for(String cardId : cardIds) {
+            cardCollection.addCardToCollection(cardRepository.getCard(cardId));
+        }
+        // response with cards as JSON
+        return new Response(HttpStatus.OK, cardCollection.getCards());
+    }
+
+    public Response getCardsFromDeckAsPlainText(RequestContext requestContext) {
+
+        String username = authenticateController.Authenticate(requestContext);
+
+        // get cards from user deck
+        List<String> cardIds = userCardsRepository.getAllCardIdsFromUserDeck(username);
+
+        // user deck has no cards response
+        if(cardIds.isEmpty()) {
+            return new Response(HttpStatus.NO_CONTENT, "The request was fine, but the deck doesn't have any cards");
+        }
+        // get cards from cardRepository
+        CardCollection cardCollection = new CardCollection();
+        for(String cardId : cardIds) {
+            cardCollection.addCardToCollection(cardRepository.getCard(cardId));
+        }
+        // response with cards as JSON
+
+        Set<String> cardDataAsPlainText = new HashSet<>();
+
+        for(Card card : cardCollection.getCards()) {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Name:");
+            stringBuilder.append(card.getName());
+            stringBuilder.append(" Damage:");
+            stringBuilder.append(card.getDamage());
+            stringBuilder.append(" Id:");
+            stringBuilder.append(card.getId());
+            cardDataAsPlainText.add(stringBuilder.toString());
+        }
+        String cardsDataAsPlainText = String.join(" | ", cardDataAsPlainText);
+        return new Response(HttpStatus.OK, cardsDataAsPlainText);
+    }
+
+    public Response configureDeck(RequestContext requestContext) {
+
+
+        String username = authenticateController.Authenticate(requestContext);
 
         // Convert body to List
-        deckData = deckData.replace("[", "").replace("]", "");
-        String[] data = deckData.split(",");
-        List<String> deckDataList = Arrays.asList(data);
+        List<String> cardIds = requestContext.getBodyAs(List.class);
 
-        if(deckDataList.size() == 4) {
-            // Postgres check if all Cards are owned by User
-            // create new Deck
-            // add DeckId to cards
-            response = new Response(HttpStatus.OK);
-        } else {
-            response = new Response(HttpStatus.BAD_REQUEST);
+
+        if(cardIds.size() != 4) {
+            return new Response(HttpStatus.BAD_REQUEST, "The provided deck did not include the required amount of cards");
         }
 
-        return response;
+        // get cardIds from cardRepository
+        // ------------------------------------------- getallavaliblecards -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+
+        List<String> cardIdsFromRepo = userCardsRepository.getAllCardIdsFromUserCards(username);
+
+        if(cardIdsFromRepo.retainAll(cardIds)) {
+            // ------------------------------------------- Avalible after trading done -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+            return new Response(HttpStatus.FORBIDDEN, "At least one of the provided cards does not belong to the user or is not available.");
+        }
+
+
+        for(String cardId : cardIds) {
+            userCardsRepository.updateCardChangeToDeck(cardId, username);
+        }
+        return new Response(HttpStatus.OK, "The deck has been successfully configured");
+    }
+
+    @Override
+    public List<Pair<RouteIdentifier, Route>> listRoutes() {
+        List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
+
+        packageRoutes.add(new Pair<>(
+                routeIdentifier("/deck", "GET"),
+                this::getCardsFromDeckAsJSON
+        ));
+
+        packageRoutes.add(new Pair<>(
+                routeIdentifier("/deck?format=plain", "GET"),
+                this::getCardsFromDeckAsPlainText
+        ));
+
+        packageRoutes.add(new Pair<>(
+                routeIdentifier("/deck", "PUT"),
+                this::configureDeck
+        ));
+
+        return packageRoutes;
     }
 }

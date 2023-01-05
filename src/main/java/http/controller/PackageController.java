@@ -1,19 +1,20 @@
 package http.controller;
 
+import game.User;
 import game.card.Card;
 import game.card.CardCollection;
 import game.router.Controller;
 import game.router.Route;
 import game.router.RouteIdentifier;
 import game.util.Pair;
+import http.server.BadRequestException;
 import http.server.HttpStatus;
 import http.server.RequestContext;
 import http.server.Response;
-import repository.CardRepositoryImpl;
-import repository.PackageRepositoryImpl;
-import repository.db.config.DatabaseConnection;
 import repository.interfaces.CardRepository;
 import repository.interfaces.PackageRepository;
+import repository.interfaces.UserCardsRepository;
+import repository.interfaces.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,18 +24,34 @@ import java.util.UUID;
 import static game.router.RouteIdentifier.routeIdentifier;
 
 public class PackageController implements Controller {
-    private CardRepository cardRepository
-            = new CardRepositoryImpl(DatabaseConnection.getInstance());
+    private CardRepository cardRepository;
 
-    private PackageRepository packageRepository
-            = new PackageRepositoryImpl(DatabaseConnection.getInstance());
+    private PackageRepository packageRepository;
 
-    private AuthenticateController authenticateController = new AuthenticateController();
+    private UserRepository userRepository;
+
+    private UserCardsRepository userCardsRepository;
+
+    private AuthenticateController authenticateController;
+
+    public PackageController(CardRepository cardRepository, PackageRepository packageRepository, UserRepository userRepository, UserCardsRepository userCardsRepository, AuthenticateController authenticateController) {
+        this.cardRepository = cardRepository;
+        this.packageRepository = packageRepository;
+        this.userRepository = userRepository;
+        this.userCardsRepository = userCardsRepository;
+        this.authenticateController = authenticateController;
+    }
+
     public Response createPackage(RequestContext requestContext) {
 
         Response response;
 
         String username = authenticateController.Authenticate(requestContext);
+
+        System.out.println(username);
+        if(!("admin".equals(username))) {
+            return new Response(HttpStatus.FORBIDDEN, "Provided user is not admin");
+        }
 
         String uniqueID = UUID.randomUUID().toString();
 
@@ -43,49 +60,46 @@ public class PackageController implements Controller {
         CardCollection cardCollection = new CardCollection();
         cardCollection.setU_ID(uniqueID);
         cardCollection.setCards(cards);
-        cardCollection.printCollection();
-        System.out.println("UID = " + cardCollection.getU_ID());
 
         for (Card card : cards) {
             Card cardFromDB = cardRepository.getCard(card.getId());
-            if(cardFromDB == null) {
-                cardRepository.createCard(card);
+            if(cardFromDB != null) {
+                return new Response(HttpStatus.CONFLICT, "At least one card in the packages already exists");
             }
         }
+        for (Card card : cards) {
+            cardRepository.createCard(card);
+        }
+
         packageRepository.createPackage(cardCollection);
 
-        response = new Response(HttpStatus.CREATED);
+        response = new Response(HttpStatus.CREATED, "Package and cards successfully created");
         return response;
     }
 
     public Response getPackage(RequestContext requestContext) {
-        // Authentication Method - get Username in return
 
-        // check if User has enough coins
-
-        Response response = new Response(HttpStatus.OK);
+        Response response;
 
         String username = authenticateController.Authenticate(requestContext);
-        System.out.println(username);
+        User user = userRepository.findUserByUsername(username);
 
-        List<String> cardIDs = packageRepository.getCardIdsFromRandomPackage();
+        if(user.getCoins() < 5) {
+            return new Response(HttpStatus.FORBIDDEN, "Not enough money for buying a card package");
+        }
+        String packageId = packageRepository.getRandomPackageId();
+        if(packageId == null) {
+            throw new BadRequestException("No card package available for buying");
+        }
+        userRepository.updateCoinsForUser(user.getCoins() - 5, username);
+        List<String> cardIDs = packageRepository.getCardIdsFromPackage(packageId);
+        packageRepository.deletePackage(packageId);
 
-        System.out.println(cardIDs);
-        // Postgres get random PackageID
+        for(String cardId : cardIDs) {
+            userCardsRepository.addCardToUserCards(cardId, username);
+        }
 
-        // get cards from Package
-        //CardRepository cardRepository = new CardRepository();
-        //CardCollection cardCollection = cardRepository.getPackageFromCollection();
-
-        // change owner of acquired cards
-
-        //Creating the ObjectMapper object
-        //Converting the Object to JSONString
-
-        //response = new Response(HttpStatus.OK, cardCollection.getCards());
-        // if no Package available or not enough coins
-        //response = new Response(HttpStatus.BAD_REQUEST);
-
+        response = new Response(HttpStatus.OK, "A package has been successfully bought");
         return response;
     }
 

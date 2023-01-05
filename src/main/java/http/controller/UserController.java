@@ -3,6 +3,7 @@ package http.controller;
 import game.Credentials;
 import game.Token;
 import game.User;
+import game.UserProfile;
 import game.router.Controller;
 import game.router.Route;
 import game.router.RouteIdentifier;
@@ -11,10 +12,8 @@ import http.server.BadRequestException;
 import http.server.HttpStatus;
 import http.server.RequestContext;
 import http.server.Response;
-import repository.TokenRepositoryImpl;
-import repository.UserRepositoryImpl;
-import repository.db.config.DatabaseConnection;
 import repository.interfaces.TokenRepository;
+import repository.interfaces.UserProfileRepository;
 import repository.interfaces.UserRepository;
 
 import java.util.ArrayList;
@@ -24,24 +23,30 @@ import static game.router.RouteIdentifier.routeIdentifier;
 
 public class UserController implements Controller {
 
-    private UserRepository userRepository
-            = new UserRepositoryImpl(DatabaseConnection.getInstance());
-    private TokenRepository tokenRepository
-            = new TokenRepositoryImpl(DatabaseConnection.getInstance());
+    private UserRepository userRepository;
+    private TokenRepository tokenRepository;
+    private UserProfileRepository userProfileRepository;
+    private AuthenticateController authenticateController;
+
+    public UserController(UserRepository userRepository, TokenRepository tokenRepository, UserProfileRepository userProfileRepository, AuthenticateController authenticateController) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.authenticateController = authenticateController;
+        this.userProfileRepository = userProfileRepository;
+    }
 
     public Response register(RequestContext requestContext) {
         Credentials credentials = requestContext.getBodyAs(Credentials.class);
-        Response response;
 
         User user = userRepository.findUserByUsername(credentials.getUsername());
         if (user != null) {
             throw new BadRequestException("User with username " + credentials.getUsername() + " already exists");
         } else {
             userRepository.create(credentials);
-            response = new Response(HttpStatus.CREATED);
+            UserProfile userProfile = new UserProfile();
+            userProfileRepository.addUserProfile(credentials.getUsername(), userProfile);
+            return new Response(HttpStatus.CREATED, "User successfully created");
         }
-
-        return response;
     }
 
     public Response login(RequestContext requestContext) {
@@ -57,14 +62,37 @@ public class UserController implements Controller {
             } else {
                 tokenRepository.updateTokenTimestamp(token);
             }
-
             response = new Response(HttpStatus.OK, "\"Token\": \"Basic " + user.getToken().getName() + "\"");
         } else {
-            // nicht erfolgreich
-            // set WWW-Authenticate header
-            response = new Response(HttpStatus.UNAUTHORIZED);
+            response = new Response(HttpStatus.UNAUTHORIZED, "Invalid username/password provided");
         }
         return response;
+    }
+
+    public Response getUserProfile(RequestContext requestContext) {
+
+        String username = authenticateController.Authenticate(requestContext);
+
+
+        // path username != username from authenticateConrtoller
+        // exeption
+        UserProfile userProfile = userProfileRepository.getUserProfile(username);
+
+
+        return new Response(HttpStatus.OK, userProfile);
+    }
+
+    public Response updateUserProfile(RequestContext requestContext) {
+
+        String username = authenticateController.Authenticate(requestContext);
+
+        // path username != username from authenticateConrtoller
+        // exeption
+        UserProfile userProfile = requestContext.getBodyAs(UserProfile.class);
+
+        userProfileRepository.updateUserProfile(username, userProfile);
+
+        return new Response(HttpStatus.OK, userProfile);
     }
 
     @Override
@@ -74,6 +102,16 @@ public class UserController implements Controller {
         userRoutes.add(new Pair<>(
                 routeIdentifier("/users", "POST"),
                 this::register
+        ));
+
+        userRoutes.add(new Pair<>(
+                routeIdentifier("/users", "GET"),
+                this::getUserProfile
+        ));
+
+        userRoutes.add(new Pair<>(
+                routeIdentifier("/users", "PUT"),
+                this::updateUserProfile
         ));
 
         userRoutes.add(new Pair<>(

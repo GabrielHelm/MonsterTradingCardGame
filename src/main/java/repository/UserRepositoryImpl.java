@@ -24,6 +24,10 @@ public class UserRepositoryImpl implements UserRepository {
                 SELECT * FROM users WHERE name = ?
             """;
 
+    private static final String UPDATE_COINS_FOR_USER_SQL = """
+                UPDATE users SET coins = ? WHERE name = ?
+            """;
+
     private static final String SETUP_TABLE = """
                 CREATE TABLE IF NOT EXISTS Users (
                     name varchar(255),
@@ -88,6 +92,19 @@ public class UserRepositoryImpl implements UserRepository {
             throw new IllegalStateException("Failed to search for user", e);
         }
         return null;
+    }
+
+    @Override
+    public void updateCoinsForUser(Integer coins, String username) {
+        try (Connection c = dataSource.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(UPDATE_COINS_FOR_USER_SQL)) {
+                ps.setInt(1, coins);
+                ps.setString(2, username);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to update coins for user", e);
+        }
     }
 
     private static User convertResultSetToUser(ResultSet resultSet) throws SQLException {

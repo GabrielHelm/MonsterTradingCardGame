@@ -16,12 +16,13 @@ public class AuthenticateController {
             = new TokenRepositoryImpl(DatabaseConnection.getInstance());
 
     public String Authenticate(RequestContext requestContext) {
-        String tokenname = requestContext.getToken();
-        Token token = tokenRepository.getTokenFromTokenName(tokenname);
+        String tokenName = requestContext.getToken();
+        Token token = tokenRepository.getTokenFromTokenName(tokenName);
+        // check if token exists and is valid
         if(token != null && token.getValid_until().after(new Timestamp(System.currentTimeMillis()))) {
-            return tokenRepository.getUsernameFromTokenName(tokenname);
+            return tokenRepository.getUsernameFromTokenName(tokenName);
         } else {
-            throw new UnauthorizedException("Authorization failed");
+            throw new UnauthorizedException("Access token is missing or invalid");
         }
     }
 }

@@ -22,9 +22,16 @@ public class PackageRepositoryImpl implements PackageRepository {
                 INSERT INTO packages (u_id, card1id, card2id, card3id, card4id, card5id) VALUES (?, ?, ?, ?, ?, ?)
             """;
 
+    private static final String SELECT_PACKAGE_SQL = """
+                SELECT card1id, card2id, card3id, card4id, card5id FROM packages WHERE u_id = ?
+            """;
+
     private static final String SELECT_RANDOM_PACKAGE_SQL = """
-                SELECT card1id, card2id, card3id, card4id, card5id FROM packages WHERE u_id = (
-                    SELECT u_id FROM packages ORDER BY RANDOM() LIMIT 1 )
+                SELECT u_id FROM packages ORDER BY RANDOM() LIMIT 1
+            """;
+
+    private static final String DELETE_PACKAGE_SQL = """
+                DELETE FROM packages WHERE  u_id = ?
             """;
 
     private static final String SETUP_TABLE = """
@@ -70,18 +77,46 @@ public class PackageRepositoryImpl implements PackageRepository {
     }
 
     @Override
-    public List<String> getCardIdsFromRandomPackage() {
+    public List<String> getCardIdsFromPackage(String packageId) {
         try (Connection c = dataSource.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(SELECT_RANDOM_PACKAGE_SQL)) {
+            try (PreparedStatement ps = c.prepareStatement(SELECT_PACKAGE_SQL)) {
+                ps.setString(1, packageId);
                 ResultSet resultSet = ps.executeQuery();
                 if (resultSet.next()) {
                     return convertResultSetToCardIdsList(resultSet);
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalStateException("Failed to get Card Ids from Random Package", e);
+            throw new IllegalStateException("Failed to get card ids from package", e);
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public String getRandomPackageId() {
+        try (Connection c = dataSource.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(SELECT_RANDOM_PACKAGE_SQL)) {
+                ResultSet resultSet = ps.executeQuery();
+                if (resultSet.next()) {
+                    return resultSet.getString(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to get random package id", e);
+        }
+        return null;
+    }
+
+    @Override
+    public void deletePackage(String packageId) {
+        try (Connection c = dataSource.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(DELETE_PACKAGE_SQL)) {
+                ps.setString(1, packageId);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to delete package", e);
+        }
     }
 
     private static List<String> convertResultSetToCardIdsList(ResultSet resultSet) throws SQLException {

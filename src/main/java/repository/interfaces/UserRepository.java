@@ -8,8 +8,6 @@ public interface UserRepository {
     boolean checkCredentials(Credentials credentials);
 
     User findUserByUsername(String username);
-    /*
-    void update(User user);
-    void delete(String userName);
-    */
+
+    void updateCoinsForUser(Integer coins, String username);
 }

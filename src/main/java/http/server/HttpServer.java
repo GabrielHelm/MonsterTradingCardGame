@@ -1,13 +1,8 @@
 package http.server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import game.router.Route;
 import game.router.RouteIdentifier;
 import game.router.Router;
-import http.controller.CardController;
-import http.controller.DeckController;
-import http.controller.PackageController;
-import http.controller.UserController;
 import http.header.Header;
 import http.header.HeaderParser;
 
@@ -16,7 +11,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -117,47 +111,5 @@ public class HttpServer {
         requestContext.setBody(new String(buffer));
         return requestContext;
     }
-/*
-    public Response routing(RequestContext requestContext) {
-        UserController userController;
-        PackageController packageController = new PackageController();
-        CardController cardController = new CardController();
-        DeckController deckController = new DeckController();
-        Response response = new Response();
-        try {
-            switch (requestContext.getPath()) {
-                case "/users":
-                    userController = new UserController();
-                    response = userController.register(requestContext);
-                    break;
-                case "/sessions":
-                    userController = new UserController();
-                    response = userController.login(requestContext);
-                    break;
-                case "/packages":
-                    response = packageController.createPackage(requestContext.getBody());
-                    break;
-                case "/transactions/packages":
-                    response = packageController.getPackage();
-                    break;
-                case "/cards":
-                    response = cardController.getCards();
-                    break;
-                case "/deck":
-                    switch (requestContext.getHttpVerb()) {
-                        case "GET":
-                            response = deckController.getDeck();
-                            break;
-                        case "PUT":
-                            response = deckController.configurateDeck(requestContext.getBody());
-                            break;
-                    }
-            }
-            return response;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    */
 
 }

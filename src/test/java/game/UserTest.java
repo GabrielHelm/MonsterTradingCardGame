@@ -22,7 +22,6 @@ class UserTest {
     void testDefaultUserInit() {
         assertEquals("DefaultUser", user1.getCredentials().getUsername());
         assertEquals("1234", user1.getCredentials().getPassword());
-        assertEquals(100, user1.getElo());
         assertEquals(20, user1.getCoins());
     }
 
@@ -31,7 +30,6 @@ class UserTest {
         user1 = new User("TestUser", "Password", 500);
         assertEquals("TestUser", user1.getCredentials().getUsername());
         assertEquals("Password", user1.getCredentials().getPassword());
-        assertEquals(500, user1.getElo());
         assertEquals(20, user1.getCoins());
     }
 

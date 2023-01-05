@@ -80,7 +80,7 @@ public class RequestContext {
             }
         }
         if(rawtoken.isEmpty()) {
-            throw new UnauthorizedException("Authorization failed");
+            throw new UnauthorizedException("Access token is missing or invalid");
         }
         return rawtoken.split(" ")[1];
     }
