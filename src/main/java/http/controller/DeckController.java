@@ -96,21 +96,21 @@ public class DeckController implements Controller {
         // Convert body to List
         List<String> cardIds = requestContext.getBodyAs(List.class);
 
-
         if(cardIds.size() != 4) {
             return new Response(HttpStatus.BAD_REQUEST, "The provided deck did not include the required amount of cards");
         }
 
         // get cardIds from cardRepository
-        // ------------------------------------------- getallavaliblecards -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
-
-        List<String> cardIdsFromRepo = userCardsRepository.getAllCardIdsFromUserCards(username);
-
-        if(cardIdsFromRepo.retainAll(cardIds)) {
-            // ------------------------------------------- Avalible after trading done -.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+        List<String> cardIdsFromRepo = userCardsRepository.getAllCardIdsFromAvailableUserCards(username);
+        List<String> cardIdsFromOldDeck = userCardsRepository.getAllCardIdsFromUserDeck(username);
+        cardIds.retainAll(cardIdsFromRepo);
+        if(cardIds.size() != 4) {
             return new Response(HttpStatus.FORBIDDEN, "At least one of the provided cards does not belong to the user or is not available.");
         }
 
+        for (String cardId : cardIdsFromOldDeck) {
+            userCardsRepository.updateCardChangeToStack(cardId, username);
+        }
 
         for(String cardId : cardIds) {
             userCardsRepository.updateCardChangeToDeck(cardId, username);

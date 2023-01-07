@@ -65,7 +65,7 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
                 ps.setString(2, userProfile.getName());
                 ps.setString(3, userProfile.getBio());
                 ps.setString(4, userProfile.getImage());
-                ps.setInt(5, 500);
+                ps.setInt(5, 100);
                 ps.setInt(6, 0);
                 ps.setInt(7, 0);
                 ps.executeUpdate();

@@ -21,7 +21,7 @@ public class Response {
         if (body != null && body.length() > 0)
         {
             headers.put("Content-Length", body.length());
-            headers.put("Content-Type", "application/json");
+            headers.put("Content-Type", "text/plain");
         }
         else
         {
@@ -59,6 +59,14 @@ public class Response {
 
     public void setHttpStatus(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
+    }
+
+    public Map<String, Object> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, Object> headers) {
+        this.headers = headers;
     }
 
     @Override

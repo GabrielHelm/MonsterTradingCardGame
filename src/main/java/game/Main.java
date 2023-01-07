@@ -18,13 +18,15 @@ public class Main {
         PackageRepository packageRepository = new PackageRepositoryImpl(databaseConnection);
         UserCardsRepository userCardsRepository = new UserCardsRepositoryImpl(databaseConnection);
         UserProfileRepository userProfileRepository = new UserProfileRepositoryImpl(databaseConnection);
-        AuthenticateController authenticateController = new AuthenticateController();
+        TradingRepository tradingRepository = new TradingRepositoryImpl(databaseConnection);
+        AuthenticateController authenticateController = new AuthenticateController(tokenRepository);
 
         UserController userController = new UserController(userRepository, tokenRepository, userProfileRepository, authenticateController);
         PackageController packageController = new PackageController(cardRepository, packageRepository, userRepository, userCardsRepository, authenticateController);
         CardController cardController = new CardController(userCardsRepository, cardRepository, authenticateController);
         DeckController deckController = new DeckController(authenticateController, userCardsRepository, cardRepository);
         GameController gameController = new GameController(userCardsRepository, authenticateController, userProfileRepository);
+        TradingController tradingController = new TradingController(authenticateController, tradingRepository, userCardsRepository, cardRepository);
 
         Router router = new Router();
         userController.listRoutes()
@@ -40,6 +42,9 @@ public class Main {
                 .forEach(router::registerRoute);
 
         gameController.listRoutes()
+                .forEach(router::registerRoute);
+
+        tradingController.listRoutes()
                 .forEach(router::registerRoute);
 
         HttpServer httpServer = new HttpServer(router);

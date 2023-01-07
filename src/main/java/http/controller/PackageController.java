@@ -25,13 +25,9 @@ import static game.router.RouteIdentifier.routeIdentifier;
 
 public class PackageController implements Controller {
     private CardRepository cardRepository;
-
     private PackageRepository packageRepository;
-
     private UserRepository userRepository;
-
     private UserCardsRepository userCardsRepository;
-
     private AuthenticateController authenticateController;
 
     public PackageController(CardRepository cardRepository, PackageRepository packageRepository, UserRepository userRepository, UserCardsRepository userCardsRepository, AuthenticateController authenticateController) {
@@ -48,7 +44,6 @@ public class PackageController implements Controller {
 
         String username = authenticateController.Authenticate(requestContext);
 
-        System.out.println(username);
         if(!("admin".equals(username))) {
             return new Response(HttpStatus.FORBIDDEN, "Provided user is not admin");
         }

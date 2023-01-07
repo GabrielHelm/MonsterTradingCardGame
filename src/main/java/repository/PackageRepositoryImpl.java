@@ -1,16 +1,11 @@
 package repository;
 
-import game.User;
 import game.card.CardCollection;
 import repository.db.config.DbConnector;
 import repository.interfaces.PackageRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,15 +14,15 @@ public class PackageRepositoryImpl implements PackageRepository {
     private final DbConnector dataSource;
 
     private static final String INSERT_PACKAGE_SQL = """
-                INSERT INTO packages (u_id, card1id, card2id, card3id, card4id, card5id) VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO packages (u_id, time_created, card1id, card2id, card3id, card4id, card5id) VALUES (?, ?, ?, ?, ?, ?, ?)
             """;
 
     private static final String SELECT_PACKAGE_SQL = """
                 SELECT card1id, card2id, card3id, card4id, card5id FROM packages WHERE u_id = ?
             """;
 
-    private static final String SELECT_RANDOM_PACKAGE_SQL = """
-                SELECT u_id FROM packages ORDER BY RANDOM() LIMIT 1
+    private static final String SELECT_OLDEST_PACKAGE_SQL = """
+                SELECT u_id FROM packages ORDER BY time_created ASC LIMIT 1
             """;
 
     private static final String DELETE_PACKAGE_SQL = """
@@ -37,6 +32,7 @@ public class PackageRepositoryImpl implements PackageRepository {
     private static final String SETUP_TABLE = """
                 CREATE TABLE IF NOT EXISTS packages (
                     u_id varchar(255),
+                    time_created timestamp,
                     card1id varchar(255),
                     card2id varchar(255),
                     card3id varchar(255),
@@ -66,8 +62,9 @@ public class PackageRepositoryImpl implements PackageRepository {
         try (Connection c = dataSource.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(INSERT_PACKAGE_SQL)) {
                 ps.setString(1, cardCollection.getU_ID());
-                for (int i = 2; i < 7; i++) {
-                    ps.setString(i, cardCollection.getCardFromCollection(i-2).getId());
+                ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                for (int i = 3; i < 8; i++) {
+                    ps.setString(i, cardCollection.getCardFromCollection(i-3).getId());
                 }
                 ps.executeUpdate();
             }
@@ -95,7 +92,7 @@ public class PackageRepositoryImpl implements PackageRepository {
     @Override
     public String getRandomPackageId() {
         try (Connection c = dataSource.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(SELECT_RANDOM_PACKAGE_SQL)) {
+            try (PreparedStatement ps = c.prepareStatement(SELECT_OLDEST_PACKAGE_SQL)) {
                 ResultSet resultSet = ps.executeQuery();
                 if (resultSet.next()) {
                     return resultSet.getString(1);

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserStats {
-
-
     private String name;
-
     private Integer elo;
     private Integer wins;
     private Integer losses;

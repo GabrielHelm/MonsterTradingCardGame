@@ -46,6 +46,14 @@ public class GameController implements Controller {
         return new Response(HttpStatus.OK, userScoreboard);
     }
 
+    public Response battle(RequestContext requestContext) {
+
+        String username = authenticateController.Authenticate(requestContext);
+
+
+        return new Response(HttpStatus.OK, "okay");
+    }
+
     @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
@@ -58,6 +66,10 @@ public class GameController implements Controller {
         packageRoutes.add(new Pair<>(
                 routeIdentifier("/score", "GET"),
                 this::getScoreboard
+        ));
+        packageRoutes.add(new Pair<>(
+                routeIdentifier("/battles", "POST"),
+                this::battle
         ));
 
         return packageRoutes;

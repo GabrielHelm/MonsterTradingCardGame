@@ -60,15 +60,6 @@ public class User{
         stack = cardRepository.getPackageFromCollection();
         deck = new CardCollection();
     }
-    public User() {
-        setCoins(20);
-        credentials = new Credentials();
-        credentials.setUsername("DefaultUser");
-        credentials.setPassword("1234");
-        CardRepository cardRepository = new CardRepository();
-        stack = cardRepository.getPackageFromCollection();
-        deck = new CardCollection();
-    }
 
     public void chooseCards() {
 

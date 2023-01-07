@@ -73,12 +73,11 @@ public class UserController implements Controller {
 
         String username = authenticateController.Authenticate(requestContext);
 
+        if(!username.equals(requestContext.getSubpath())) {
+            return new Response(HttpStatus.NOT_FOUND, "User not found");
+        }
 
-        // path username != username from authenticateConrtoller
-        // exeption
         UserProfile userProfile = userProfileRepository.getUserProfile(username);
-
-
         return new Response(HttpStatus.OK, userProfile);
     }
 
@@ -86,13 +85,13 @@ public class UserController implements Controller {
 
         String username = authenticateController.Authenticate(requestContext);
 
-        // path username != username from authenticateConrtoller
-        // exeption
+        if(!username.equals(requestContext.getSubpath())) {
+            return new Response(HttpStatus.NOT_FOUND, "User not found");
+        }
+
         UserProfile userProfile = requestContext.getBodyAs(UserProfile.class);
-
         userProfileRepository.updateUserProfile(username, userProfile);
-
-        return new Response(HttpStatus.OK, userProfile);
+        return new Response(HttpStatus.OK, "User sucessfully updated");
     }
 
     @Override
@@ -105,12 +104,12 @@ public class UserController implements Controller {
         ));
 
         userRoutes.add(new Pair<>(
-                routeIdentifier("/users", "GET"),
+                routeIdentifier("/users/", "GET"),
                 this::getUserProfile
         ));
 
         userRoutes.add(new Pair<>(
-                routeIdentifier("/users", "PUT"),
+                routeIdentifier("/users/", "PUT"),
                 this::updateUserProfile
         ));
 

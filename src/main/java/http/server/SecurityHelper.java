@@ -11,8 +11,8 @@ public class SecurityHelper {
         try {
             digest = MessageDigest.getInstance("SHA-256");
             byte[] byteOfTextToHash = textToHash.getBytes(StandardCharsets.UTF_8);
-            byte[] hashedByetArray = digest.digest(byteOfTextToHash);
-            return Base64.getEncoder().encodeToString(hashedByetArray);
+            byte[] hashedByteArray = digest.digest(byteOfTextToHash);
+            return Base64.getEncoder().encodeToString(hashedByteArray);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

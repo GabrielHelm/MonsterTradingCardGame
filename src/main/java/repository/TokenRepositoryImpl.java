@@ -5,8 +5,10 @@ import game.User;
 import repository.db.config.DbConnector;
 import repository.interfaces.TokenRepository;
 
-import java.sql.*;
-import java.util.concurrent.TimeUnit;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TokenRepositoryImpl implements TokenRepository {
 
