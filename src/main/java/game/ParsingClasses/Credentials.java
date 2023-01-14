@@ -1,4 +1,4 @@
-package game;
+package game.ParsingClasses;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

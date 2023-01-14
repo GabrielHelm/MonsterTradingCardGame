@@ -1,6 +1,6 @@
 package repository.interfaces;
 
-import game.Credentials;
+import game.ParsingClasses.Credentials;
 import game.User;
 
 public interface UserRepository {

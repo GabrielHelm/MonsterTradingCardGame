@@ -1,11 +1,8 @@
 package http.controller;
 
 import game.Token;
-import http.server.BadRequestException;
 import http.server.RequestContext;
 import http.server.UnauthorizedException;
-import repository.TokenRepositoryImpl;
-import repository.db.config.DatabaseConnection;
 import repository.interfaces.TokenRepository;
 
 import java.sql.Timestamp;

@@ -1,16 +1,17 @@
 package game;
 
+import game.ParsingClasses.Credentials;
+import game.ParsingClasses.UserStats;
+import game.card.Card;
 import game.card.CardCollection;
-import game.card.CardRepository;
-
-import java.util.Scanner;
 
 public class User{
     private Credentials credentials;
     private Token token;
     private Integer coins;
-    private CardCollection stack;
     private CardCollection deck;
+
+    private UserStats userStats;
 
     public Integer getCoins() {
         return coins;
@@ -20,13 +21,6 @@ public class User{
         this.coins = coins;
     }
 
-    public CardCollection getStack() {
-        return stack;
-    }
-
-    public void setStack(CardCollection stack) {
-        this.stack = stack;
-    }
     public Credentials getCredentials() {
         return credentials;
     }
@@ -43,6 +37,14 @@ public class User{
         this.token = token;
     }
 
+    public UserStats getUserStats() {
+        return userStats;
+    }
+
+    public void setUserStats(UserStats userStats) {
+        this.userStats = userStats;
+    }
+
     public CardCollection getDeck() {
         return deck;
     }
@@ -56,38 +58,7 @@ public class User{
         credentials.setUsername(username);
         credentials.setPassword(password);
         setCoins(coins);
-        CardRepository cardRepository = new CardRepository();
-        stack = cardRepository.getPackageFromCollection();
         deck = new CardCollection();
-    }
-
-    public void chooseCards() {
-
-        Scanner in = new Scanner(System.in);
-        for (int i = 0; i < 4; i++) {
-            int cardindex = UserInputChooseCardIndex(in);
-            deck.addCardToCollection(stack.getAndRemoveCardFromCollection(cardindex-1));
-        }
-        System.out.println("Your current Deck:");
-        deck.printCollection();
-    }
-
-    public int UserInputChooseCardIndex(Scanner in)
-    {
-        int cardIndex;
-        do {
-            System.out.println("Choose 1 of the following Cards to put it in your Deck:");
-            stack.printCollection();
-            while(!in.hasNextInt()) {
-                System.out.println("Please enter a number!");
-                if(in.hasNext()) {
-                    in.next();
-                }
-            }
-            cardIndex = in.nextInt();
-        } while(cardIndex <= 0 || cardIndex > stack.getCollectionSize());
-
-        return cardIndex;
     }
 
     public void generateToken() {

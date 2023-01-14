@@ -20,7 +20,7 @@ public class Response {
         this.body = body;
         if (body != null && body.length() > 0)
         {
-            headers.put("Content-Length", body.length());
+            headers.put("Content-Length", body.length() + 1);
             headers.put("Content-Type", "text/plain");
         }
         else
@@ -31,10 +31,10 @@ public class Response {
 
     public Response(HttpStatus httpStatus, Object body) {
         this.httpStatus = httpStatus;
-        this.body = getJSONBodyAsString(body);
+        this.body = "null".equals(getJSONBodyAsString(body)) ? null : getJSONBodyAsString(body);
         if (body != null && this.body.length() > 0)
         {
-            headers.put("Content-Length", this.body.length());
+            headers.put("Content-Length", this.body.length() + 1);
             headers.put("Content-Type", "application/json");
         }
         else
@@ -77,11 +77,12 @@ public class Response {
             stringBuilder.append(header.getKey()).append(": ").append(header.getValue()).append("\n");
         }
 
-        stringBuilder.append("\n");
         if(body != null && body.length() > 0)
         {
+            stringBuilder.append("\n");
             stringBuilder.append(body);
         }
+        stringBuilder.append("\n");
         return stringBuilder.toString();
     }
 

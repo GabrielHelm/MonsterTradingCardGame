@@ -3,6 +3,8 @@ package game;
 import game.card.Card;
 import game.card.CardCollection;
 
+import java.util.Random;
+
 public class Fight {
 
     String logLine;
@@ -19,6 +21,7 @@ public class Fight {
         double card2CalculatedDamage = card2.getCalculatedDamage(card1);
 
         SetLogLine(card1, card2, user1, user2);
+
 
         if(card1CalculatedDamage > card2CalculatedDamage) {
             User1Deck.addCardToCollection(card1);

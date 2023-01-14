@@ -1,7 +1,7 @@
 package repository;
 
-import game.UserProfile;
-import game.UserStats;
+import game.ParsingClasses.UserProfile;
+import game.ParsingClasses.UserStats;
 import repository.db.config.DbConnector;
 import repository.interfaces.UserProfileRepository;
 
@@ -31,6 +31,10 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
 
     private static final String UPDATE_PROFILE_FROM_USER_SQL = """
                 UPDATE user_profile SET name = ?, bio = ?, image = ? WHERE username = ?
+            """;
+
+    private static final String UPDATE_STATS_FROM_USER_SQL = """
+                UPDATE user_profile SET elo = ?, wins = ?, losses = ? WHERE username = ?
             """;
 
     private static final String SETUP_TABLE = """
@@ -87,6 +91,21 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to update user profile", e);
+        }
+    }
+
+    @Override
+    public void updateUserStats(String username, UserStats userStats) {
+        try (Connection c = dataSource.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(UPDATE_STATS_FROM_USER_SQL)) {
+                ps.setInt(1, userStats.getElo());
+                ps.setInt(2, userStats.getWins());
+                ps.setInt(3, userStats.getLosses());
+                ps.setString(4, username);
+                ps.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new IllegalStateException("Failed to update user stats", e);
         }
     }
 

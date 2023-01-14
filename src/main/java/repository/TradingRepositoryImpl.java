@@ -1,6 +1,6 @@
 package repository;
 
-import game.TradingDeal;
+import game.ParsingClasses.TradingDeal;
 import repository.db.config.DbConnector;
 import repository.interfaces.TradingRepository;
 

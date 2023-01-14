@@ -11,8 +11,7 @@ public class RequestContext {
     private static final String CONTENT_LENGTH_HEADER_NAME = "Content-Length";
     private String httpVerb;
     private String path;
-
-    private String subpath;
+    private String subPath;
     private List<Header> headers;
     private String body;
 
@@ -33,20 +32,26 @@ public class RequestContext {
     public void setPath(String path) {
         if(path.startsWith("/users/")) {
             this.path = path.substring(0, 7);
-            this.subpath = path.substring(7);
+            this.subPath = path.substring(7);
         } else if(path.startsWith("/tradings/")) {
             this.path = path.substring(0, 10);
-            this.subpath = path.substring(10);
-        }else {
+            this.subPath = path.substring(10);
+        } else if (path.contains("?")) {
+            this.path = path.substring(0,path.indexOf('?'));
+            this.subPath = path.substring(path.indexOf('?'));
+            System.out.println(path);
+            System.out.println(subPath);
+
+        } else {
             this.path = path;
         }
     }
     public String getSubpath() {
-        return subpath;
+        return subPath;
     }
 
     public void setSubpath(String subpath) {
-        this.subpath = subpath;
+        this.subPath = subpath;
     }
 
     public List<Header> getHeaders() {

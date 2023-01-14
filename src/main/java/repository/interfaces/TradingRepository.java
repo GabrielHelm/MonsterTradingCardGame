@@ -1,6 +1,6 @@
 package repository.interfaces;
 
-import game.TradingDeal;
+import game.ParsingClasses.TradingDeal;
 
 import java.util.List;
 

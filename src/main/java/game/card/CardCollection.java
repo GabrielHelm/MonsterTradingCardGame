@@ -13,14 +13,6 @@ public class CardCollection {
         return cards;
     }
 
-    public CardCollection getPackageFromCollection() {
-        CardCollection Package = new CardCollection();
-        for (int i = 0; i < 5; i++) {
-            Package.addCardToCollection(getAndRemoveRandomCardFromCollection());
-        }
-        return Package;
-    }
-
     public void setCards(List<Card> cards) {
         this.cards = cards;
     }

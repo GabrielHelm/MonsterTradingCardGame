@@ -34,7 +34,7 @@ public class DeckController implements Controller {
     }
 
 
-    public Response getCardsFromDeckAsJSON(RequestContext requestContext) {
+    public Response getCardsFromDeck(RequestContext requestContext) {
 
         String username = authenticateController.Authenticate(requestContext);
 
@@ -50,42 +50,28 @@ public class DeckController implements Controller {
         for(String cardId : cardIds) {
             cardCollection.addCardToCollection(cardRepository.getCard(cardId));
         }
-        // response with cards as JSON
-        return new Response(HttpStatus.OK, cardCollection.getCards());
-    }
+        System.out.println(requestContext.getSubpath());
 
-    public Response getCardsFromDeckAsPlainText(RequestContext requestContext) {
+        if(requestContext.getSubpath() == null || requestContext.getSubpath().isEmpty()) {
+            // response with cards as JSON
+            return new Response(HttpStatus.OK, cardCollection.getCards());
+        } else {
+            // response with cards as plainText
+            Set<String> cardDataAsPlainText = new HashSet<>();
 
-        String username = authenticateController.Authenticate(requestContext);
-
-        // get cards from user deck
-        List<String> cardIds = userCardsRepository.getAllCardIdsFromUserDeck(username);
-
-        // user deck has no cards response
-        if(cardIds.isEmpty()) {
-            return new Response(HttpStatus.NO_CONTENT, "The request was fine, but the deck doesn't have any cards");
+            for(Card card : cardCollection.getCards()) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("Name:");
+                stringBuilder.append(card.getName());
+                stringBuilder.append(" Damage:");
+                stringBuilder.append(card.getDamage());
+                stringBuilder.append(" Id:");
+                stringBuilder.append(card.getId());
+                cardDataAsPlainText.add(stringBuilder.toString());
+            }
+            String cardsDataAsPlainText = String.join(" | ", cardDataAsPlainText);
+            return new Response(HttpStatus.OK, cardsDataAsPlainText);
         }
-        // get cards from cardRepository
-        CardCollection cardCollection = new CardCollection();
-        for(String cardId : cardIds) {
-            cardCollection.addCardToCollection(cardRepository.getCard(cardId));
-        }
-        // response with cards as JSON
-
-        Set<String> cardDataAsPlainText = new HashSet<>();
-
-        for(Card card : cardCollection.getCards()) {
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Name:");
-            stringBuilder.append(card.getName());
-            stringBuilder.append(" Damage:");
-            stringBuilder.append(card.getDamage());
-            stringBuilder.append(" Id:");
-            stringBuilder.append(card.getId());
-            cardDataAsPlainText.add(stringBuilder.toString());
-        }
-        String cardsDataAsPlainText = String.join(" | ", cardDataAsPlainText);
-        return new Response(HttpStatus.OK, cardsDataAsPlainText);
     }
 
     public Response configureDeck(RequestContext requestContext) {
@@ -124,12 +110,7 @@ public class DeckController implements Controller {
 
         packageRoutes.add(new Pair<>(
                 routeIdentifier("/deck", "GET"),
-                this::getCardsFromDeckAsJSON
-        ));
-
-        packageRoutes.add(new Pair<>(
-                routeIdentifier("/deck?format=plain", "GET"),
-                this::getCardsFromDeckAsPlainText
+                this::getCardsFromDeck
         ));
 
         packageRoutes.add(new Pair<>(

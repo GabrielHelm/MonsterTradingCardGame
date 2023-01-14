@@ -1,6 +1,6 @@
 package repository;
 
-import game.Credentials;
+import game.ParsingClasses.Credentials;
 import game.User;
 import repository.db.config.DbConnector;
 import repository.interfaces.UserRepository;

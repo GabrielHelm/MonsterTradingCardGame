@@ -25,7 +25,7 @@ public class Main {
         PackageController packageController = new PackageController(cardRepository, packageRepository, userRepository, userCardsRepository, authenticateController);
         CardController cardController = new CardController(userCardsRepository, cardRepository, authenticateController);
         DeckController deckController = new DeckController(authenticateController, userCardsRepository, cardRepository);
-        GameController gameController = new GameController(userCardsRepository, authenticateController, userProfileRepository);
+        GameController gameController = new GameController(userCardsRepository, authenticateController, userProfileRepository, userRepository, cardRepository);
         TradingController tradingController = new TradingController(authenticateController, tradingRepository, userCardsRepository, cardRepository);
 
         Router router = new Router();

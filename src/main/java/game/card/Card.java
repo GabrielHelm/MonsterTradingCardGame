@@ -82,6 +82,19 @@ public class Card {
 
 
     public double getCalculatedDamage(Card enemy) {
+        // special rules
+        if(name.toLowerCase().contains("goblin") && enemy.name.toLowerCase().contains("dragon")) {
+            return 0;
+        } else if (name.toLowerCase().contains("ork") && enemy.name.toLowerCase().contains("wizard")) {
+            return 0;
+        } else if (name.toLowerCase().contains("knight") && (enemy.cardType == CardType.spell && enemy.element == ElementType.water)) {
+            return 0;
+        } else if (cardType == CardType.spell && enemy.name.toLowerCase().contains("kraken")) {
+            return 0;
+        } else if (name.toLowerCase().contains("dragon") && (enemy.name.toLowerCase().contains("elf") && enemy.element == ElementType.fire)) {
+            return 0;
+        }
+
         if(cardType == CardType.monster && enemy.cardType == CardType.monster) {
             return damage;
         }

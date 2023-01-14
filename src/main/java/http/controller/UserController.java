@@ -1,9 +1,9 @@
 package http.controller;
 
-import game.Credentials;
+import game.ParsingClasses.Credentials;
 import game.Token;
 import game.User;
-import game.UserProfile;
+import game.ParsingClasses.UserProfile;
 import game.router.Controller;
 import game.router.Route;
 import game.router.RouteIdentifier;

@@ -1,6 +1,6 @@
 package http.controller;
 
-import game.TradingDeal;
+import game.ParsingClasses.TradingDeal;
 import game.card.Card;
 import game.router.Controller;
 import game.router.Route;
