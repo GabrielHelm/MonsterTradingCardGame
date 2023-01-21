@@ -43,7 +43,7 @@ public class UserController implements Controller {
             throw new BadRequestException("User with username " + credentials.getUsername() + " already exists");
         } else {
             userRepository.create(credentials);
-            UserProfile userProfile = new UserProfile();
+            UserProfile userProfile = new UserProfile(credentials.getUsername());
             userProfileRepository.addUserProfile(credentials.getUsername(), userProfile);
             return new Response(HttpStatus.CREATED, "User successfully created");
         }

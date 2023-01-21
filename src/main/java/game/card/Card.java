@@ -8,7 +8,7 @@ public class Card {
     @JsonProperty("Name")
     private String name;
     @JsonProperty("Damage")
-    private Double damage;
+    private final Double damage;
 
     @JsonProperty("Id")
     private String id;

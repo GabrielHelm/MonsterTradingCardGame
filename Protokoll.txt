@@ -1,0 +1,48 @@
+Server design:
+Für die Implementierung des Servers habe ich eine HttpServer Klasse erstellt. 
+In dieser gibt es eine Start-Funktion mit einem executorService mit einem FixedThreadPool mit 10 Threads. 
+Jedes Mal, wenn sich ein Client auf meinen Serversocket verbindet, wird der Request an den executorService übergeben und abgearbeitet. 
+Zum Abarbeiten des Requests lese ich den InputStream des Sockets aus und finde über einen Routefinder die richtige Route. 
+Danach wird in einzelnen Controllern der Request bearbeitet und eine Response zurückgegeben, welche dann an den Client zurückgesendet wird.
+Für die Datenbankverbindung habe ich Hikari verwendet. 
+Für jede Datenbanktabelle gibt es eine eigene Repository-Klasse, welche die Tabelle erstellt und die Standard Select, Insert, Update und Delete Abfragen implementiert.
+Zu den wichtigen Dependencies, die ich für mein Projekt verwendet habe, zählen: jUNIT, Jackson, postgresql, HikariCP, slf4j-simple (for logging Hikari)
+
+Bei der Ausarbeitung der Aufgabe hatte ich viele Erkenntnisse zur Programmierung eines http-Servers. 
+Vor allem das Parsen von JSON Objekten mithilfe von Jackson war sehr herausfordernd, da ich kaum Fehlermeldungen hatte die mir weitergeholfen haben. 
+Weiters ist es interessant, dass man bestimmte Variablen mithilfe von @JsonProperty einen anderen Namen zuweisen kann. 
+Weiters habe ich auch gelernt wie wichtig UNIT-Tests und Integrationstests sind, da diese einem wirklich Zeit sparen und voran bringen können.
+Für die UNIT-Tests habe ich Basis-Klassen für das Game und die Request bzw Response des Servers ausführlich getestet. 
+Diese Code-Tests sind wichtig um sicherzustellen, dass das Game korrekt berechnet wird. Auch wird somit sichergestellt, dass der Response korrekt formatiert ist. 
+Im ElementTypeTest habe ich auch einen ParameterizedTest ausprobiert. 
+
+Custom feature:
+curl -X POST http://localhost:10001/battles/simulator --header "Authorization: Basic kienboec-mtcgToken" -d "{\"Username\":\"altenhof\"}"
+
+Das Custom Feature ist ein Battle Simulator. Dabei wird http://localhost:10001/battles/simulator aufgerufen und im Body ein Spieler übergeben.
+Anschließend wird das Battle zwischen dem aufrufenden und übergebenen Nutzer zehn Mal durchgeführt.
+Als Response bekommt man die wins/losses/draws und die Win-Loss-Percentage zurück.
+
+
+Tracked time:
+16.11.2022	3 Stunden
+18.11.2022	2 Stunden
+19.11.2022	6 Stunden
+20.11.2022	1 Stunde
+11.12.2022	30 min
+13.12.2022	7 Stunden
+23.12.2022	2 Stunden
+29.12.2022	3 Stunden
+30.12.2022	2 Stunden
+03.01.2023	4 Stunden
+04.01.2023	3 Stunden
+05.01.2023	2 Stunden
+07.01.2023	4 Stunden
+14.01.2023	6 Stunden
+21.01.2023	4 Stunden
+
+Link GitHub: https://github.com/GabrielHelm/MonsterTradingCardGame
+
+
+ 
+

@@ -9,8 +9,8 @@ public class UserProfile {
     private String bio;
     private String image;
 
-    public UserProfile(){
-        name = "";
+    public UserProfile(String name){
+        this.name = name;
         bio = "";
         image = "";
     }
