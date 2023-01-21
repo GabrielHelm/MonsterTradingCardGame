@@ -15,7 +15,7 @@ public class AuthenticateController {
 
     private TokenRepository tokenRepository;
 
-    public String Authenticate(RequestContext requestContext) {
+    public String authenticate(RequestContext requestContext) {
         String tokenName = requestContext.getToken();
         Token token = tokenRepository.getTokenFromTokenName(tokenName);
         // check if token exists and is valid

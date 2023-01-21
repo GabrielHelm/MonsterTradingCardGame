@@ -16,13 +16,6 @@ public class UserStats {
         this.wins = wins;
         this.losses = losses;
     }
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getElo() {
         return elo;
@@ -46,5 +39,13 @@ public class UserStats {
 
     public void setLosses(Integer losses) {
         this.losses = losses;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

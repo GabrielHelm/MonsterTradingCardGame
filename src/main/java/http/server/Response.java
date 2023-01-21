@@ -65,10 +65,6 @@ public class Response {
         return headers;
     }
 
-    public void setHeaders(Map<String, Object> headers) {
-        this.headers = headers;
-    }
-
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

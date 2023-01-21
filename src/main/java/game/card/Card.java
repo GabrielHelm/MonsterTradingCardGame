@@ -21,10 +21,6 @@ public class Card {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Double getDamage() {
         return damage;
     }
@@ -37,18 +33,8 @@ public class Card {
         return cardType;
     }
 
-    public void setCardType(CardType cardType) {
-        this.cardType = cardType;
-    }
-
     public ElementType getElement() {
         return element;
-    }
-    public Card() {
-    }
-
-    public void setElement(ElementType element) {
-        this.element = element;
     }
 
     public Card(String name, Double damage, ElementType element, String id, CardType cardType) {
@@ -80,7 +66,6 @@ public class Card {
         }
     }
 
-
     public double getCalculatedDamage(Card enemy) {
         // special rules
         if(name.toLowerCase().contains("goblin") && enemy.name.toLowerCase().contains("dragon")) {
@@ -103,5 +88,4 @@ public class Card {
             return damage * modifier;
         }
     }
-
 }

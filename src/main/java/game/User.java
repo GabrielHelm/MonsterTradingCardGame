@@ -2,7 +2,6 @@ package game;
 
 import game.ParsingClasses.Credentials;
 import game.ParsingClasses.UserStats;
-import game.card.Card;
 import game.card.CardCollection;
 
 public class User{
@@ -25,16 +24,8 @@ public class User{
         return credentials;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
-
     public Token getToken() {
         return token;
-    }
-
-    public void setToken(Token token) {
-        this.token = token;
     }
 
     public UserStats getUserStats() {

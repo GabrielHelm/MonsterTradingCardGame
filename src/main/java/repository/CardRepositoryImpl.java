@@ -1,6 +1,5 @@
 package repository;
 
-import game.Token;
 import game.card.Card;
 import game.card.CardType;
 import game.card.ElementType;

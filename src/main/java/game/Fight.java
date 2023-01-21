@@ -3,19 +3,17 @@ package game;
 import game.card.Card;
 import game.card.CardCollection;
 
-import java.util.Random;
-
 public class Fight {
 
     String logLine;
 
     public String fightOneRound(User user1, User user2) {
 
-        CardCollection User1Deck = user1.getDeck();
-        CardCollection User2Deck = user2.getDeck();
+        CardCollection user1Deck = user1.getDeck();
+        CardCollection user2Deck = user2.getDeck();
 
-        Card card1 = User1Deck.getAndRemoveRandomCardFromCollection();
-        Card card2 = User2Deck.getAndRemoveRandomCardFromCollection();
+        Card card1 = user1Deck.getAndRemoveRandomCardFromCollection();
+        Card card2 = user2Deck.getAndRemoveRandomCardFromCollection();
 
         double card1CalculatedDamage = card1.getCalculatedDamage(card2);
         double card2CalculatedDamage = card2.getCalculatedDamage(card1);
@@ -24,16 +22,16 @@ public class Fight {
 
 
         if(card1CalculatedDamage > card2CalculatedDamage) {
-            User1Deck.addCardToCollection(card1);
-            User1Deck.addCardToCollection(card2);
+            user1Deck.addCardToCollection(card1);
+            user1Deck.addCardToCollection(card2);
             addWinnerToLogLine(card1CalculatedDamage, card2CalculatedDamage, card1);
         } else if (card1CalculatedDamage < card2CalculatedDamage) {
-            User2Deck.addCardToCollection(card1);
-            User2Deck.addCardToCollection(card2);
+            user2Deck.addCardToCollection(card1);
+            user2Deck.addCardToCollection(card2);
             addWinnerToLogLine(card1CalculatedDamage, card2CalculatedDamage, card2);
         } else {
-            User1Deck.addCardToCollection(card1);
-            User2Deck.addCardToCollection(card2);
+            user1Deck.addCardToCollection(card1);
+            user2Deck.addCardToCollection(card2);
             addDrawToLogLine(card1CalculatedDamage, card2CalculatedDamage);
         }
 

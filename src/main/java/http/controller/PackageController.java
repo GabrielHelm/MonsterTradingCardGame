@@ -42,7 +42,7 @@ public class PackageController implements Controller {
 
         Response response;
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         if(!("admin".equals(username))) {
             return new Response(HttpStatus.FORBIDDEN, "Provided user is not admin");
@@ -76,7 +76,7 @@ public class PackageController implements Controller {
 
         Response response;
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
         User user = userRepository.findUserByUsername(username);
 
         if(user.getCoins() < 5) {
@@ -98,7 +98,6 @@ public class PackageController implements Controller {
         return response;
     }
 
-    @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
 

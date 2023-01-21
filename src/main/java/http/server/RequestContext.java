@@ -38,20 +38,13 @@ public class RequestContext {
             this.subPath = path.substring(10);
         } else if (path.contains("?")) {
             this.path = path.substring(0,path.indexOf('?'));
-            this.subPath = path.substring(path.indexOf('?'));
-            System.out.println(path);
-            System.out.println(subPath);
-
+            this.subPath = path.substring(path.indexOf('?') + 1);
         } else {
             this.path = path;
         }
     }
     public String getSubpath() {
         return subPath;
-    }
-
-    public void setSubpath(String subpath) {
-        this.subPath = subpath;
     }
 
     public List<Header> getHeaders() {

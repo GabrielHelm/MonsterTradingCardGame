@@ -36,7 +36,7 @@ public class DeckController implements Controller {
 
     public Response getCardsFromDeck(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         // get cards from user deck
         List<String> cardIds = userCardsRepository.getAllCardIdsFromUserDeck(username);
@@ -77,7 +77,7 @@ public class DeckController implements Controller {
     public Response configureDeck(RequestContext requestContext) {
 
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         // Convert body to List
         List<String> cardIds = requestContext.getBodyAs(List.class);
@@ -104,7 +104,6 @@ public class DeckController implements Controller {
         return new Response(HttpStatus.OK, "The deck has been successfully configured");
     }
 
-    @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
 

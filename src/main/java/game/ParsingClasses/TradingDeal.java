@@ -22,31 +22,16 @@ public class TradingDeal {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getCardToTrade() {
         return cardToTrade;
-    }
-
-    public void setCardToTrade(String cardToTrade) {
-        this.cardToTrade = cardToTrade;
     }
 
     public CardType getType() {
         return type;
     }
 
-    public void setType(CardType type) {
-        this.type = type;
-    }
-
     public double getMinimumDamage() {
         return minimumDamage;
     }
 
-    public void setMinimumDamage(double minimumDamage) {
-        this.minimumDamage = minimumDamage;
-    }
 }

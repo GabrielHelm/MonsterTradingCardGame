@@ -71,7 +71,7 @@ public class UserController implements Controller {
 
     public Response getUserProfile(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         if(!username.equals(requestContext.getSubpath())) {
             return new Response(HttpStatus.NOT_FOUND, "User not found");
@@ -83,7 +83,7 @@ public class UserController implements Controller {
 
     public Response updateUserProfile(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         if(!username.equals(requestContext.getSubpath())) {
             return new Response(HttpStatus.NOT_FOUND, "User not found");
@@ -94,7 +94,6 @@ public class UserController implements Controller {
         return new Response(HttpStatus.OK, "User sucessfully updated");
     }
 
-    @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> userRoutes = new ArrayList<>();
 

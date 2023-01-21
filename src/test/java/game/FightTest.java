@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FightTest {
 
-    Fight fight;
-    User user1;
-    User user2;
-    Card monster;
-    Card spell;
+    private Fight fight;
+    private User user1;
+    private User user2;
+    private Card monster;
+    private Card spell;
 
     @BeforeEach
     void init() {

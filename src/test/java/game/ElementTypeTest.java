@@ -12,85 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ElementTypeTest {
 
-    ElementType elementType1;
-    ElementType elementType2;
-
     public static Stream<Arguments> providedParametersForTestElementVsElement() {
         return Stream.of(
-                Arguments.of(ElementType.fire, ElementType.normal, 2, 0.5)
+                Arguments.of(ElementType.fire, ElementType.normal, 2, 0.5),
+                Arguments.of(ElementType.fire, ElementType.water, 0.5, 2),
+                Arguments.of(ElementType.normal, ElementType.water, 2, 0.5),
+                Arguments.of(ElementType.fire, ElementType.fire, 1, 1),
+                Arguments.of(ElementType.water, ElementType.water, 1, 1),
+                Arguments.of(ElementType.normal, ElementType.normal, 1, 1)
         );
-    }
-
-    @Test
-    void testFireVsNormal()
-    {
-        elementType1 = ElementType.fire;
-        elementType2 = ElementType.normal;
-
-        double modifier1 = elementType1.getModifier(elementType2);
-        double modifier2 = elementType2.getModifier(elementType1);
-
-        assertEquals(2, modifier1);
-        assertEquals(0.5, modifier2);
-    }
-
-    @Test
-    void testFireVsWater()
-    {
-        elementType1 = ElementType.fire;
-        elementType2 = ElementType.water;
-
-        double modifier1 = elementType1.getModifier(elementType2);
-        double modifier2 = elementType2.getModifier(elementType1);
-
-        assertEquals(0.5, modifier1);
-        assertEquals(2, modifier2);
-    }
-
-    @Test
-    void testNormalVsWater()
-    {
-        elementType1 = ElementType.normal;
-        elementType2 = ElementType.water;
-
-        double modifier1 = elementType1.getModifier(elementType2);
-        double modifier2 = elementType2.getModifier(elementType1);
-
-        assertEquals(2, modifier1);
-        assertEquals(0.5, modifier2);
-    }
-
-    @Test
-    void testFireVsFire()
-    {
-        elementType1 = ElementType.fire;
-        elementType2 = ElementType.fire;
-
-        double modifier = elementType1.getModifier(elementType2);
-
-        assertEquals(1, modifier);
-    }
-
-    @Test
-    void testNormalVsNormal()
-    {
-        elementType1 = ElementType.normal;
-        elementType2 = ElementType.normal;
-
-        double modifier = elementType1.getModifier(elementType2);
-
-        assertEquals(1, modifier);
-    }
-
-    @Test
-    void testWaterVsWater()
-    {
-        elementType1 = ElementType.water;
-        elementType2 = ElementType.water;
-
-        double modifier = elementType1.getModifier(elementType2);
-
-        assertEquals(1, modifier);
     }
 
     @ParameterizedTest

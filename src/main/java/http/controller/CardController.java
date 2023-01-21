@@ -33,7 +33,7 @@ public class CardController implements Controller {
     public Response getCards(RequestContext requestContext) {
 
         Response response;
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         // get cards from user stack
         List<String> cardIds = userCardsRepository.getAllCardIdsFromUserCards(username);
@@ -52,7 +52,6 @@ public class CardController implements Controller {
         return response;
     }
 
-    @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
 

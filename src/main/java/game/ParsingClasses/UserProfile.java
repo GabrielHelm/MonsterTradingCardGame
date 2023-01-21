@@ -2,7 +2,6 @@ package game.ParsingClasses;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import http.server.SecurityHelper;
 
 public class UserProfile {
 
@@ -25,23 +24,12 @@ public class UserProfile {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getBio() {
         return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 }

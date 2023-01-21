@@ -37,7 +37,7 @@ public class TradingController implements Controller {
 
     public Response getTradingDeals(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         List<TradingDeal> tradingDeals = tradingRepository.getTradingDeals(username);
 
@@ -49,7 +49,7 @@ public class TradingController implements Controller {
 
     public Response createTradingDeal(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         TradingDeal tradingDeal = requestContext.getBodyAs(TradingDeal.class);
 
@@ -71,7 +71,7 @@ public class TradingController implements Controller {
 
     public Response deleteTradingDeal(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
 
         TradingDeal tradingDeal = tradingRepository.getTradingDeal(requestContext.getSubpath());
         if(tradingDeal == null) {
@@ -91,7 +91,7 @@ public class TradingController implements Controller {
 
     public Response acceptTradingDeal(RequestContext requestContext) {
 
-        String username = authenticateController.Authenticate(requestContext);
+        String username = authenticateController.authenticate(requestContext);
         String tradingDealCardId = requestContext.getBodyAs(String.class);
         String tradingDealId = requestContext.getSubpath();
 
@@ -121,7 +121,6 @@ public class TradingController implements Controller {
         return new Response(HttpStatus.OK, "Trading deal successfully executed.");
     }
 
-    @Override
     public List<Pair<RouteIdentifier, Route>> listRoutes() {
         List<Pair<RouteIdentifier, Route>> packageRoutes = new ArrayList<>();
 

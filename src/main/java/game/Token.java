@@ -26,15 +26,8 @@ public class Token {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Timestamp getValid_until() {
         return valid_until;
     }
 
-    public void setValid_until(Timestamp valid_until) {
-        this.valid_until = valid_until;
-    }
 }

@@ -7,7 +7,7 @@ import java.util.Base64;
 
 public class SecurityHelper {
     public String hashWith256(String textToHash) {
-        MessageDigest digest = null;
+        MessageDigest digest;
         try {
             digest = MessageDigest.getInstance("SHA-256");
             byte[] byteOfTextToHash = textToHash.getBytes(StandardCharsets.UTF_8);
