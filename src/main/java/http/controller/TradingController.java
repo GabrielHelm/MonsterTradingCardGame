@@ -111,12 +111,13 @@ public class TradingController implements Controller {
         }
 
         Card offeredCard = cardRepository.getCard(tradingDealCardId);
-        if(offeredCard.getCardType() != tradingDeal.getType() || offeredCard.getDamage() < tradingDeal.getMinimumDamage()) {
+        if(offeredCard.getCardType() != tradingDeal.getType() || offeredCard.getDamage() <= tradingDeal.getMinimumDamage()) {
             return new Response(HttpStatus.FORBIDDEN, "The offered card is not owned by the user, or the requirements are not met (Type, MinimumDamage), or the offered card is locked in the deck.");
         }
 
         userCardsRepository.updateCardChangeUser(tradingDealCardId, tradingDealOwner);
         userCardsRepository.updateCardChangeUser(tradingDeal.getCardToTrade(), username);
+        userCardsRepository.updateCardChangeToAvailable(tradingDeal.getCardToTrade(),username);
         tradingRepository.deleteTradingDeal(tradingDealId);
         return new Response(HttpStatus.OK, "Trading deal successfully executed.");
     }

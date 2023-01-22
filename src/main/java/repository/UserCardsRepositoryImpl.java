@@ -120,9 +120,9 @@ public class UserCardsRepositoryImpl implements UserCardsRepository {
         updateCard(cardId, username, UPDATE_CARDS_CHANGE_USER_SQL);
     }
 
-    private void updateCard(String cardId, String username, String updateCardsChangeToUserStackSql) {
+    private void updateCard(String cardId, String username, String updateCardsChangeToSql) {
         try (Connection c = dataSource.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(updateCardsChangeToUserStackSql)) {
+            try (PreparedStatement ps = c.prepareStatement(updateCardsChangeToSql)) {
                 ps.setString(1, username);
                 ps.setString(2, cardId);
                 ps.executeUpdate();
